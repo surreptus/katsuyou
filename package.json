@@ -2,6 +2,7 @@
   "name": "catsuyou",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
+  "type": "module",
   "scripts": {
     "ts:check": "tsc",
     "start": "expo start",
@@ -31,7 +32,8 @@
     "eslint-plugin-n": "^15.0.0 || ^16.0.0 ",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.33.2",
-    "prettier": "3.1.0"
+    "prettier": "3.1.0",
+    "unofficial-jisho-api": "^2.3.4"
   },
   "private": true
 }

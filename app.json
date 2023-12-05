@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "catsuyou",
-    "slug": "catsuyou",
+    "name": "katsuyou",
+    "slug": "katsuyou",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
