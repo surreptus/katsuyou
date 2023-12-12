@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Button, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, Button } from "react-native";
 import { Chip } from "../../components/Chip";
+import verbs from "../../../data/verbs.json";
 
 interface PracticeScreenProps {
   navigation: any;
@@ -8,10 +9,14 @@ interface PracticeScreenProps {
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
   const [value, setValue] = useState("");
+  const [current, setCurrent] = useState(0);
+
+  const isCorrect = value === verbs[current].slug;
+  const verb = verbs[current];
 
   return (
     <View style={styles.container}>
-      <Text>this is the home screen</Text>
+      <Text>{verb.slug}</Text>
 
       <TextInput
         value={value}
@@ -20,7 +25,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         enterKeyHint="next"
         autoComplete="off"
         autoCapitalize="none"
-        style={styles.input}
+        style={[styles.input, isCorrect ? styles.valid : styles.invalid]}
         placeholder="Enter the conjugated form"
       />
 
@@ -28,6 +33,13 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         <Chip label="Past" />
         <Chip label="Polite" />
       </View>
+
+      {isCorrect && (
+        <>
+          <Button title="hard" />
+          <Button title="easy" />
+        </>
+      )}
     </View>
   );
 };
@@ -58,5 +70,11 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "rgba(0,0,0,0.16)",
     borderRadius: 5,
+  },
+  invalid: {
+    color: "red",
+  },
+  valid: {
+    color: "green",
   },
 });
