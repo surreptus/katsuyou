@@ -7,11 +7,12 @@ import {
   Switch,
   View,
 } from "react-native";
+import Heading from "../../components/Heading";
 
 export const SettingsScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.heading}>Settings</Text>
+      <Heading>Settings</Heading>
 
       <View>
         <Text>Setting 1</Text>
@@ -28,7 +29,6 @@ export const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "orange",
     flex: 1,
   },
   heading: {
