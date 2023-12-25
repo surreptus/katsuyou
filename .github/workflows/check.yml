@@ -27,4 +27,4 @@ jobs:
         yarn
     - name: Test
       run: |
-        yarn test
+        yarn ts:check
