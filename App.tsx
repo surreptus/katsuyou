@@ -1,3 +1,5 @@
+import "react-native-gesture-handler";
+
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { PracticeScreen } from "./app/screens/Practice";
@@ -21,14 +23,14 @@ export default function App() {
       >
         <Tab.Screen
           options={{
-            tabBarIcon: ({ focused, color }) => <Zap color={color} />,
+            tabBarIcon: ({ color }) => <Zap color={color} />,
           }}
           name="Practice"
           component={PracticeScreen}
         />
         <Tab.Screen
           options={{
-            tabBarIcon: ({ color, focused }) => <List color={color} />,
+            tabBarIcon: ({ color }) => <List color={color} />,
           }}
           name="Verbs"
           component={VerbsScreen}
@@ -36,7 +38,7 @@ export default function App() {
         <Tab.Screen
           name="Settings"
           options={{
-            tabBarIcon: ({ color, focused }) => <Settings color={color} />,
+            tabBarIcon: ({ color }) => <Settings color={color} />,
           }}
           component={SettingsScreen}
         />
@@ -50,6 +52,6 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   active: {
-    color: "red",
+    color: "green",
   },
 });

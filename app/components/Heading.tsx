@@ -1,9 +1,9 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { StyleSheet, Text } from "react-native";
 
 interface Props {
   size?: "title" | "subtitle";
-  children: string;
+  children: ReactNode;
 }
 
 export default function Heading({ children, size = "title" }: Props) {
