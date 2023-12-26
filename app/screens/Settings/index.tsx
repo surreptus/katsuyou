@@ -29,6 +29,7 @@ export const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    padding: 8,
     flex: 1,
   },
   heading: {

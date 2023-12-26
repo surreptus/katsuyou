@@ -8,7 +8,7 @@ interface ChipProps {
 export function Chip({ label }: ChipProps) {
   return (
     <View style={styles.chip}>
-      <Text>{label}</Text>
+      <Text style={styles.text}>{label}</Text>
     </View>
   );
 }
@@ -17,6 +17,10 @@ const styles = StyleSheet.create({
   chip: {
     borderRadius: 50,
     backgroundColor: "orange",
-    paddingHorizontal: 12,
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+  },
+  text: {
+    fontSize: 16,
   },
 });

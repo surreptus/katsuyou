@@ -58,7 +58,7 @@ const List = ({ navigation }) => {
 export const VerbsScreen = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Verbs" component={List} />
+      <Stack.Screen name="List" component={List} />
       <Stack.Screen name="Show" component={Show} />
     </Stack.Navigator>
   );
@@ -66,6 +66,7 @@ export const VerbsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
+    padding: 8,
     backgroundColor: "#f7f7f7",
     flex: 1,
   },
