@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.katsuyou"
     },
     "web": {
       "favicon": "./app/assets/favicon.png"

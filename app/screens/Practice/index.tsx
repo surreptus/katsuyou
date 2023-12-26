@@ -1,55 +1,88 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Button } from "react-native";
+import { StyleSheet, View, TextInput, Button } from "react-native";
 import { Chip } from "../../components/Chip";
 import lessons from "../../../data/lessons.json";
 import Heading from "../../components/Heading";
+import { Formik, FormikHelpers } from "formik";
+import Text from "../../components/Text";
+import * as yup from "yup";
+
+function getNextLesson() {
+  return lessons[Math.floor(Math.random() * lessons.length)];
+}
+
+interface FormValues {
+  guess: string;
+}
 
 interface PracticeScreenProps {
   navigation: any;
 }
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
-  const [value, setValue] = useState("");
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(getNextLesson());
 
-  const isCorrect = value === lessons[current].slug;
-  const verb = lessons[current];
-
-  function handleNext() {
-    setValue("");
-    setCurrent(current + 1);
+  function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
+    resetForm();
+    setCurrent(getNextLesson());
   }
 
   return (
     <View style={styles.container}>
-      <Heading>{verb.slug}</Heading>
+      <Heading>{current.slug}</Heading>
 
-      <Text>{verb.senses[0].meanings}</Text>
+      <Text>{current.senses[0].meanings}</Text>
 
-      <View>
-        <TextInput
-          value={value}
-          onChangeText={setValue}
-          autoCorrect={false}
-          enterKeyHint="next"
-          autoComplete="off"
-          autoCapitalize="none"
-          style={[styles.input, isCorrect ? styles.valid : styles.invalid]}
-          placeholder="Enter the conjugated form"
-        />
+      <Formik
+        enableReinitialize
+        initialValues={{ guess: "" }}
+        validationSchema={yup.object({
+          guess: yup
+            .string()
+            .matches(new RegExp(current.slug), "Must match")
+            .required(),
+        })}
+        onSubmit={handleSubmit}
+      >
+        {({ isValid, handleChange, handleBlur, handleSubmit, values }) => (
+          <View>
+            <TextInput
+              onChangeText={handleChange("guess")}
+              onBlur={handleBlur("guess")}
+              value={values.guess}
+              autoCorrect={false}
+              enterKeyHint="next"
+              autoComplete="off"
+              autoCapitalize="none"
+              style={[styles.input, isValid ? styles.valid : styles.invalid]}
+            />
 
-        <View style={styles.modifiers}>
-          <Chip label="Past" />
-          <Chip label="Polite" />
-        </View>
-      </View>
+            <Text variant="caption">Get Hint</Text>
 
-      {isCorrect && (
-        <View style={styles.difficulty}>
-          <Button color="red" onPress={handleNext} title="hard" />
-          <Button color="green" onPress={handleNext} title="easy" />
-        </View>
-      )}
+            <View>
+              <View style={styles.modifiers}>
+                <Chip label="Past" />
+                <Chip label="Polite" />
+              </View>
+            </View>
+
+            {isValid && (
+              <View style={styles.difficulty}>
+                <Button
+                  color="red"
+                  onPress={handleSubmit as any}
+                  title="Hard"
+                />
+                <Button
+                  color="green"
+                  onPress={handleSubmit as any}
+                  title="Easy"
+                />
+              </View>
+            )}
+          </View>
+        )}
+      </Formik>
     </View>
   );
 };

@@ -11,7 +11,7 @@ function getStyles(variant: Props["variant"]) {
 }
 
 interface Props {
-  children: string;
+  children: React.ReactNode;
   variant?: "caption" | "body" | "label";
 }
 

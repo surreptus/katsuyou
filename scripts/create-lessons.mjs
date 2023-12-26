@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises'
 
 async function createLessons() {
-    const verbs = JSON.parse(await fs.readFile('./data/verbs.json'))
+    const verbs = JSON.parse(await fs.readFile('./app/data/verbs.json'))
 
     return verbs.reduce((lessons, verb) => {
         return [
@@ -30,4 +30,4 @@ const result = await createLessons()
 
 console.log(result)
 
-fs.writeFile('./data/lessons.json', JSON.stringify(result))
+fs.writeFile('./app/data/lessons.json', JSON.stringify(result))
