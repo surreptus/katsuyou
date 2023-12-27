@@ -1,4 +1,7 @@
-## Katsuyou
+Katsuyou
+---
+
+![Main](https://github.com/surreptus/katsuyou/actions/workflows/check.yml/badge.svg)
 
 > Katsuyou is a small application to learn and practice conjugations for Japaneese verbs and phrases.
 
