@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Button } from "react-native";
 import { Chip } from "../../components/Chip";
-import lessons from "../../../data/lessons.json";
+import lessons from "../../data/lessons.json";
 import Heading from "../../components/Heading";
 import { Formik, FormikHelpers } from "formik";
 import Text from "../../components/Text";
 import * as yup from "yup";
+import { useTranslation } from "react-i18next";
 
 function getNextLesson() {
   return lessons[Math.floor(Math.random() * lessons.length)];
@@ -20,6 +21,7 @@ interface PracticeScreenProps {
 }
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
+  const { t } = useTranslation();
   const [current, setCurrent] = useState(getNextLesson());
 
   function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
@@ -29,9 +31,18 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <Heading>{current.slug}</Heading>
+      <View data-testid="slug-modifier">
+        <Heading>{current.slug}</Heading>
 
-      <Text>{current.senses[0].meanings}</Text>
+        <View style={styles.modifiers}>
+          <Chip label="Past" />
+          <Chip label="Polite" />
+        </View>
+      </View>
+
+      <Text data-testid="meanings">
+        {current.senses[0].meanings.join(", ")}{" "}
+      </Text>
 
       <Formik
         enableReinitialize
@@ -44,42 +55,47 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         })}
         onSubmit={handleSubmit}
       >
-        {({ isValid, handleChange, handleBlur, handleSubmit, values }) => (
+        {({
+          isValid,
+          dirty,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+        }) => (
           <View>
             <TextInput
+              data-testid="guess-input"
               onChangeText={handleChange("guess")}
               onBlur={handleBlur("guess")}
               value={values.guess}
               autoCorrect={false}
+              placeholder="Guess"
               enterKeyHint="next"
               autoComplete="off"
               autoCapitalize="none"
               style={[styles.input, isValid ? styles.valid : styles.invalid]}
             />
 
-            <Text variant="caption">Get Hint</Text>
+            <Button title={t("Get Hint")} />
 
-            <View>
-              <View style={styles.modifiers}>
-                <Chip label="Past" />
-                <Chip label="Polite" />
-              </View>
+            <View style={styles.difficulty}>
+              {dirty && isValid && (
+                <>
+                  <Button
+                    color="red"
+                    onPress={handleSubmit as any}
+                    title={t("Hard")}
+                  />
+                  <Button title="Definition" />
+                  <Button
+                    color="green"
+                    onPress={handleSubmit as any}
+                    title={t("Easy")}
+                  />
+                </>
+              )}
             </View>
-
-            {isValid && (
-              <View style={styles.difficulty}>
-                <Button
-                  color="red"
-                  onPress={handleSubmit as any}
-                  title="Hard"
-                />
-                <Button
-                  color="green"
-                  onPress={handleSubmit as any}
-                  title="Easy"
-                />
-              </View>
-            )}
           </View>
         )}
       </Formik>
@@ -91,7 +107,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 24,
-    backgroundColor: "#f7f7f7",
     alignItems: "stretch",
     padding: 8,
     justifyContent: "center",
@@ -124,6 +139,8 @@ const styles = StyleSheet.create({
   },
   difficulty: {
     justifyContent: "space-around",
+    height: 140,
+    justifySelf: "flex-end",
     flexDirection: "row",
   },
 });

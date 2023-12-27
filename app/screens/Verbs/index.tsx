@@ -10,8 +10,8 @@ import {
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Text from "../../components/Text";
-import verbs from "../../../data/verbs.json";
 import Heading from "../../components/Heading";
+import verbs from "../../data/verbs.json";
 import Show from "./Show";
 
 const Stack = createStackNavigator();
