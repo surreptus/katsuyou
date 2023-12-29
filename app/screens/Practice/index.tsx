@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Button } from "react-native";
 import { Chip } from "../../components/Chip";
-import lessons from "../../data/lessons.json";
 import Heading from "../../components/Heading";
 import { Formik, FormikHelpers } from "formik";
 import Text from "../../components/Text";
 import * as yup from "yup";
 import { useTranslation } from "react-i18next";
-
-function getNextLesson() {
-  return lessons[Math.floor(Math.random() * lessons.length)];
-}
+import { getNextLesson } from "./helpers";
 
 interface FormValues {
   guess: string;
@@ -31,7 +27,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <View data-testid="slug-modifier">
+      <View>
         <Heading>{current.slug}</Heading>
 
         <View style={styles.modifiers}>
@@ -40,9 +36,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         </View>
       </View>
 
-      <Text data-testid="meanings">
-        {current.senses[0].meanings.join(", ")}{" "}
-      </Text>
+      <Text>{current.senses[0].meanings.join(", ")} </Text>
 
       <Formik
         enableReinitialize
@@ -65,7 +59,6 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         }) => (
           <View>
             <TextInput
-              data-testid="guess-input"
               onChangeText={handleChange("guess")}
               onBlur={handleBlur("guess")}
               value={values.guess}

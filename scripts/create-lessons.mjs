@@ -2,6 +2,19 @@ import fs from 'node:fs/promises'
 
 async function createLessons() {
     const verbs = JSON.parse(await fs.readFile('./app/data/verbs.json'))
+    const frequency = JSON.parse(await fs.readFile('./app/data/frequency.json'))
+
+    const filtered = verbs.filter((verb) => {
+        const isNoun = verb.senses.find(sense => {
+            return sense.parts_of_speech.includes('Noun')
+        })
+
+        if (isNoun) return false
+
+        return frequency.find(freq => freq.word === verb.slug)
+    })
+
+    console.log(filtered.length)
 
     return verbs.reduce((lessons, verb) => {
         return [
@@ -27,7 +40,5 @@ async function createLessons() {
 }
 
 const result = await createLessons()
-
-console.log(result)
 
 fs.writeFile('./app/data/lessons.json', JSON.stringify(result))

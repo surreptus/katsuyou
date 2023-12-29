@@ -16,6 +16,22 @@ yarn start
 
 From here, you can start the iOS simulator by hitting `i` (assuming that you have it installed via xcode).
 
+#### Supported Conjugations
+
+There can be different tenses of the conjugations:
+
+- past
+- past polite
+- present polite
+- passive
+- potential
+- causative
+- te-form
+
+We should also quiz for possibly negative forms of each tense. For example:
+`たべる → 食べなかった`
+`食べられない　→ 食べられなかった`
+
 #### Issues
 
 Please add any outstanding bugs, or features to the Github issues page.

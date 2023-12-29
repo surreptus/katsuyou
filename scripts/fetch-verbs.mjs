@@ -19,6 +19,6 @@ async function fetchVerbs(phrase, page) {
     return result.data
 }
 
-const result = await fetchVerbs('#jlpt-n5 #verb #common', 1)
+const result = await fetchVerbs('#verb #common', 1)
 
 fs.writeFile('./app/data/verbs.json', JSON.stringify(result))
