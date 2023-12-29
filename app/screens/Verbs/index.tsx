@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  SafeAreaView,
   View,
   TextInput,
   VirtualizedList,
@@ -46,7 +45,7 @@ const List = ({ navigation }) => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View>
       <Heading>Verbs</Heading>
 
       <TextInput
@@ -64,7 +63,7 @@ const List = ({ navigation }) => {
           <Item item={item} handleNavigate={handlePress} />
         )}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
