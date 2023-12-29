@@ -1,13 +1,18 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import Heading from "../../components/Heading";
+import verbs from "../../data/verbs.json";
 
 export default function Show({ route, navigation }) {
   const { slug } = route.params;
 
+  const verb = verbs.find((verb) => verb.slug === slug);
+
+  if (!verb) return null;
+
   return (
     <View>
-      <Text>Verbs Show</Text>
-      <Text>{slug}</Text>
+      <Heading>{verb.slug}</Heading>
     </View>
   );
 }

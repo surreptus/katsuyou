@@ -21,15 +21,17 @@ export default function StyledText({ variant = "body", children }: Props) {
 
 const styles = StyleSheet.create({
   body: {
-    fontSize: 16,
+    fontSize: 18,
     lineHeight: 24,
   },
   caption: {
-    fontSize: 12,
+    color: "gray",
+    fontSize: 14,
     lineHeight: 16,
   },
   label: {
     fontSize: 14,
+    fontWeight: "bold",
     lineHeight: 20,
   },
 });

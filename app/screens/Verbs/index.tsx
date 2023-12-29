@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
-  TouchableHighlight,
   View,
   TextInput,
   VirtualizedList,
@@ -13,8 +12,25 @@ import Text from "../../components/Text";
 import Heading from "../../components/Heading";
 import verbs from "../../data/verbs.json";
 import Show from "./Show";
+import * as types from "../../types";
 
 const Stack = createStackNavigator();
+
+interface ItemProps {
+  item: types.Verb;
+  handleNavigate: (slug: string) => void;
+}
+
+function Item({ item, handleNavigate }: ItemProps) {
+  return (
+    <Pressable onPress={() => handleNavigate(item.slug)} key={item.slug}>
+      <View style={styles.item}>
+        <Text>{item.slug}</Text>
+        <Text variant="caption">{item.senses[0].english_definitions[0]}</Text>
+      </View>
+    </Pressable>
+  );
+}
 
 const List = ({ navigation }) => {
   const [filter, setFilter] = useState("");
@@ -24,6 +40,10 @@ const List = ({ navigation }) => {
   }
 
   const filtered = verbs.filter((verb) => verb.slug.includes(filter));
+
+  function handlePress(slug: string) {
+    return navigation.push("Show", { slug });
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -38,17 +58,10 @@ const List = ({ navigation }) => {
       <VirtualizedList
         data={filtered}
         getItemCount={() => filtered.length}
-        keyExtractor={(item: any) => item.slug}
+        keyExtractor={(item: types.Verb) => item.slug}
         getItem={(data, index) => data[index]}
         renderItem={({ item }) => (
-          <Pressable
-            onPress={() => navigation.push("Show", { slug: item.slug })}
-            key={item.slug}
-          >
-            <View style={styles.item}>
-              <Text>{item.slug}</Text>
-            </View>
-          </Pressable>
+          <Item item={item} handleNavigate={handlePress} />
         )}
       />
     </SafeAreaView>
@@ -66,7 +79,6 @@ export const VerbsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
     backgroundColor: "#f7f7f7",
     flex: 1,
   },

@@ -5,7 +5,6 @@ import Heading from "../../components/Heading";
 import { Formik, FormikHelpers } from "formik";
 import Text from "../../components/Text";
 import * as yup from "yup";
-import { useTranslation } from "react-i18next";
 import { getNextLesson } from "./helpers";
 
 interface FormValues {
@@ -17,7 +16,6 @@ interface PracticeScreenProps {
 }
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
-  const { t } = useTranslation();
   const [current, setCurrent] = useState(getNextLesson());
 
   function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
@@ -70,7 +68,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
               style={[styles.input, isValid ? styles.valid : styles.invalid]}
             />
 
-            <Button title={t("Get Hint")} />
+            <Button title="Get Hint" />
 
             <View style={styles.difficulty}>
               {dirty && isValid && (
@@ -78,13 +76,13 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
                   <Button
                     color="red"
                     onPress={handleSubmit as any}
-                    title={t("Hard")}
+                    title="Hard"
                   />
                   <Button title="Definition" />
                   <Button
                     color="green"
                     onPress={handleSubmit as any}
-                    title={t("Easy")}
+                    title="Easy"
                   />
                 </>
               )}

@@ -2,9 +2,8 @@ import "react-native-gesture-handler";
 
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import i18next from "./app/utilities/i18n.config";
 import { List, Settings, Zap } from "react-native-feather";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { PracticeScreen } from "./app/screens/Practice";
 import { SettingsScreen } from "./app/screens/Settings";
 import { NavigationContainer } from "@react-navigation/native";
