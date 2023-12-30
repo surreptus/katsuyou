@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, DimensionValue } from "react-native";
 
 interface Props {
   percent: string;
@@ -8,7 +8,9 @@ interface Props {
 export default function Progress({ percent }: Props) {
   return (
     <View style={styles.container}>
-      <View style={[styles.bar, { width: `${percent}%` }]}></View>
+      <View
+        style={[styles.bar, { width: `${percent}%` as DimensionValue }]}
+      ></View>
     </View>
   );
 }
