@@ -1,0 +1,27 @@
+import React from "react";
+import { View, StyleSheet } from "react-native";
+
+interface Props {
+  percent: string;
+}
+
+export default function Progress({ percent }: Props) {
+  return (
+    <View style={styles.container}>
+      <View style={[styles.bar, { width: `${percent}%` }]}></View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    height: 16,
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "lightgray",
+  },
+  bar: {
+    height: "100%",
+    backgroundColor: "red",
+  },
+});

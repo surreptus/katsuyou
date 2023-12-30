@@ -6,6 +6,7 @@ import { Formik, FormikHelpers } from "formik";
 import Text from "../../components/Text";
 import * as yup from "yup";
 import { getNextLesson } from "./helpers";
+import Progress from "../../components/Progress";
 
 interface FormValues {
   guess: string;
@@ -25,6 +26,8 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
 
   return (
     <View style={styles.container}>
+      <Progress percent="90" />
+
       <View>
         <Heading>{current.slug}</Heading>
 
