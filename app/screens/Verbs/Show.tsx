@@ -7,6 +7,8 @@ import verbs from "../../data/verbs.json";
 export default function Show({ route, navigation }) {
   const { slug } = route.params;
 
+  navigation.setOptions({ title: slug });
+
   const verb = verbs.find((verb) => verb.slug === slug);
 
   if (!verb) return null;
@@ -25,7 +27,7 @@ export default function Show({ route, navigation }) {
       })}
 
       <Button
-        onPress={() => Linking.openURL("https://google.com")}
+        onPress={() => Linking.openURL(`https://jisho.org/search/${slug}`)}
         title="Open Jisho"
       />
     </ScrollView>

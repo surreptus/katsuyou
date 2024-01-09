@@ -5,6 +5,7 @@ import {
   TextInput,
   VirtualizedList,
   Pressable,
+  SafeAreaView,
 } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Text from "../../components/Text";
@@ -45,32 +46,40 @@ const List = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Heading>Verbs</Heading>
+    <SafeAreaView>
+      <View>
+        <Heading>Verbs</Heading>
 
-      <TextInput
-        style={styles.filter}
-        value={filter}
-        onChangeText={handleFilter}
-      />
+        <TextInput
+          style={styles.filter}
+          value={filter}
+          onChangeText={handleFilter}
+        />
 
-      <VirtualizedList
-        data={filtered}
-        getItemCount={() => filtered.length}
-        keyExtractor={(item: types.Verb) => item.slug}
-        getItem={(data, index) => data[index]}
-        renderItem={({ item }) => (
-          <Item item={item} handleNavigate={handlePress} />
-        )}
-      />
-    </View>
+        <VirtualizedList
+          data={filtered}
+          getItemCount={() => filtered.length}
+          keyExtractor={(item: types.Verb) => item.slug}
+          getItem={(data, index) => data[index]}
+          renderItem={({ item }) => (
+            <Item item={item} handleNavigate={handlePress} />
+          )}
+        />
+      </View>
+    </SafeAreaView>
   );
 };
 
 export const VerbsScreen = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="List" component={List} />
+      <Stack.Screen
+        name="List"
+        component={List}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="Show" component={Show} />
     </Stack.Navigator>
   );
