@@ -22,6 +22,7 @@ function getStyles(variant: Props["variant"]) {
 const styles = StyleSheet.create({
   heading: {
     fontWeight: "bold",
+    paddingBottom: 8,
   },
   title: {
     fontSize: 48,

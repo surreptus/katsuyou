@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -21,7 +21,7 @@ interface ItemProps {
   handleNavigate: (slug: string) => void;
 }
 
-function Item({ item, handleNavigate }: ItemProps) {
+const Item = memo(function Item({ item, handleNavigate }: ItemProps) {
   return (
     <Pressable onPress={() => handleNavigate(item.slug)} key={item.slug}>
       <View style={styles.item}>
@@ -30,7 +30,7 @@ function Item({ item, handleNavigate }: ItemProps) {
       </View>
     </Pressable>
   );
-}
+});
 
 const List = ({ navigation }) => {
   const [filter, setFilter] = useState("");
@@ -47,12 +47,13 @@ const List = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <View>
-        <Heading>Verbs</Heading>
+      <View style={styles.container}>
+        <Heading variant="subtitle">Verbs</Heading>
 
         <TextInput
           style={styles.filter}
           value={filter}
+          placeholder="Search for a verb ..."
           onChangeText={handleFilter}
         />
 
@@ -62,7 +63,7 @@ const List = ({ navigation }) => {
           keyExtractor={(item: types.Verb) => item.slug}
           getItem={(data, index) => data[index]}
           renderItem={({ item }) => (
-            <Item item={item} handleNavigate={handlePress} />
+            <Item item={item} handleNavigate={handlePress} key={item.slug} />
           )}
         />
       </View>
@@ -87,8 +88,7 @@ export const VerbsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f7f7f7",
-    flex: 1,
+    paddingHorizontal: 16,
   },
   heading: {
     padding: 8,
@@ -96,9 +96,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   filter: {
-    fontSize: 32,
-    padding: 8,
-    backgroundColor: "#f3f3f3",
+    fontSize: 24,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: "rgba(0,0,0,0.1)",
+    borderRadius: 8,
   },
   item: {
     padding: 10,

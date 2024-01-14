@@ -21,6 +21,7 @@ export default function StyledText({ variant = "body", children }: Props) {
 
 const styles = StyleSheet.create({
   body: {
+    paddingBottom: 8,
     fontSize: 18,
     lineHeight: 24,
   },

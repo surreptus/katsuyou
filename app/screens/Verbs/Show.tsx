@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Linking, ScrollView, View } from "react-native";
+import { StyleSheet, Button, Linking, ScrollView, View } from "react-native";
 import Heading from "../../components/Heading";
 import Text from "../../components/Text";
 import verbs from "../../data/verbs.json";
@@ -14,12 +14,12 @@ export default function Show({ route, navigation }) {
   if (!verb) return null;
 
   return (
-    <ScrollView>
+    <ScrollView style={styles.container}>
       <Heading>{verb.slug}</Heading>
 
       {verb.senses.map((sense, index) => {
         return (
-          <View key={`${slug}-${index}`} style={{ padding: 8 }}>
+          <View key={`${slug}-${index}`}>
             <Text>{sense.english_definitions.join(", ")}</Text>
             <Text variant="caption">{sense.info}</Text>
           </View>
@@ -33,3 +33,9 @@ export default function Show({ route, navigation }) {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+});
