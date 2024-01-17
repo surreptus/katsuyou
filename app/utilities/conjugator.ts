@@ -80,7 +80,38 @@ function getVerbStem(verb: Verb): string {
   }
 }
 
-function conjugate(
+/**
+ * returns the 'a' syllable version of a character
+ *
+ * @param character string
+ * @returns
+ */
+function getVerbA(character: string): string {
+  switch (character) {
+    case `う`:
+      return `わ`;
+    case `く`:
+      return `か`;
+    case `す`:
+      return `さ`;
+    case `つ`:
+      return `た`;
+    case `ぬ`:
+      return `な`;
+    case `ぶ`:
+      return `ば`;
+    case `む`:
+      return `ま`;
+    case `る`:
+      return `ら`;
+    case `ぐ`:
+      return `が`;
+    default:
+      return character;
+  }
+}
+
+function inflect(
   verb: Verb,
   inflection: Inflection,
   isNegative: boolean
@@ -109,16 +140,93 @@ function conjugate(
   }
 }
 
-function makeNegative(verb: Verb) {
-  if (verb.slug === "する") {
-    return "しない";
-  } else if (verb.slug === "くる") {
-    return "こない";
+function makeNegative(lesson: Lesson) {
+  if (lesson.answer === "する") {
+    return {
+      ...lesson,
+      answer: "しない",
+    };
+  } else if (lesson.answer === "くる") {
+    return {
+      answer: "こない",
+    };
   }
 
-  if (verb.family === "ichidan") {
-    return verb.slug.slice(0, -1);
+  if (lesson.family === "ichidan") {
+    return lesson.slug.slice(0, -1);
   }
 
-  const lastCharacter = verb.slug.slice(-1);
+  const lastCharacter = lesson.slug.slice(-1);
+}
+
+function makePast(lesson: Lesson) {
+  if (lesson.answer === "する") {
+    return {
+      ...lesson,
+      answer: "した",
+    };
+  } else if (lesson.answer === "くる") {
+    return {
+      ...lesson,
+      answer: "きた",
+    };
+  }
+
+  if (lesson.family === "ichidan") {
+    return {
+      ...lesson,
+      answer: lesson.slug.slice(0, -1) + "た",
+    };
+  }
+
+  const lastCharacter = lesson.slug.slice(-1);
+}
+
+function makeTe(lesson: Lesson) {
+  if (lesson.answer === "する") {
+    return {
+      ...lesson,
+      answer: "して",
+    };
+  } else if (lesson.answer === "くる") {
+    return {
+      ...lesson,
+      answer: "きて",
+    };
+  }
+
+  if (lesson.family === "ichidan") {
+    return {
+      ...lesson,
+      answer: lesson.slug.slice(0, -1) + "て",
+    };
+  }
+
+  switch (lesson.slug.slice(-1)) {
+    case `う`:
+    case "つ":
+    case "る":
+      return {
+        ...lesson,
+        answer: `${lesson.slug}って`,
+      };
+    case `む`:
+    case "ぶ":
+    case "ぬ":
+      return {
+        ...lesson,
+        answer: `${lesson.slug}んで`,
+      };
+    case `く`:
+    case "ぐ":
+      return {
+        ...lesson,
+        answer: `${lesson.slug}いて`,
+      };
+    case `す`:
+      return {
+        ...lesson,
+        answer: `${lesson.slug}して`,
+      };
+  }
 }
