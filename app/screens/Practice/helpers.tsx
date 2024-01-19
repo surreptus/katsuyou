@@ -1,5 +1,5 @@
-import lessons from "../../data/lessons.json";
+import verbs from "../../data/verbs.json";
 
 export function getNextLesson() {
-  return lessons[Math.floor(Math.random() * lessons.length)];
+  return verbs[Math.floor(Math.random() * verbs.length)];
 }

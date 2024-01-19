@@ -117,10 +117,13 @@ function inflect(
   isNegative: boolean
 ): string {
   switch (inflection) {
+    // 食べる
     case "non-past":
       return verb.slug;
+    // 食べます
     case "non-past-polite":
       return getVerbStem(verb) + "ます";
+    // 食べた
     case "past":
       return getVerbStem(verb) + "た";
     case "past-polite":

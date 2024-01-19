@@ -6,7 +6,7 @@ import {
   userEvent,
   waitFor,
 } from "@testing-library/react-native";
-import lessons from "../../data/lessons.json";
+import lessons from "../../data/verbs.json";
 
 const mockLesson = lessons[0];
 

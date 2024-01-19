@@ -37,7 +37,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         </View>
       </View>
 
-      <Text>{current.senses[0].meanings.join(", ")} </Text>
+      <Text>{current.senses[0].english_definitions} </Text>
 
       <Formik
         enableReinitialize
