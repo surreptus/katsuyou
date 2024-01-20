@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, TextInput, Button } from "react-native";
 import { Chip } from "../../components/Chip";
 import Heading from "../../components/Heading";
@@ -7,6 +7,48 @@ import Text from "../../components/Text";
 import * as yup from "yup";
 import { getNextLesson } from "./helpers";
 import Progress from "../../components/Progress";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
+import { Lesson } from "../../types";
+import verbs from "../../data/verbs.json";
+
+/**
+ * lessons are a unit of conjugation practice. they include a the base verb, the inflection,
+ * level of familiarity, and due date.
+ *
+ * @returns
+ */
+function useLessons() {
+  const [lessons, setLessons] = useState([]);
+  const { getItem, setItem } = useAsyncStorage("@lessons");
+
+  useEffect(() => {
+    async function fetchLessons() {
+      const data = await getItem();
+
+      setLessons(data ? JSON.parse(data) : []);
+    }
+  }, []);
+
+  function findNextOverdueLesson(lessons: Lesson[]) {
+    return lessons.find((lesson) => new Date(lesson.dueAt) <= new Date());
+  }
+
+  function getNextLessonFromVerbs() {
+    return verbs.find((verb) => {
+      const alreadyLearning = lessons.find(
+        (lesson) => lesson.slug === verb.slug
+      )!!;
+
+      return;
+    });
+  }
+
+  function getNextLesson() {
+    return findNextOverdueLesson(lessons) ?? getNextLessonFromVerbs();
+  }
+
+  return { getNextLesson };
+}
 
 interface FormValues {
   guess: string;

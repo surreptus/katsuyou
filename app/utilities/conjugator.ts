@@ -1,4 +1,4 @@
-import { Verb } from "../types";
+import { Group, Inflection, Verb } from "../types";
 
 /**
 Affirmative 	Negative
@@ -12,27 +12,14 @@ Passive 	食べられる 	食べられない
 Causative 	食べさせる 	食べさせない
 Causative Passive 	食べさせられる 	食べさせられない
 Imperative 	食べろ 	食べるな
- */
+*/
 
-interface Lesson {
-  slug: string;
-  answer: string;
-  family: "ichidan" | "godan" | "irregular";
-  inflection: Inflection;
-  isNegative: boolean;
+enum EndingVowel {
+  A,
+  I,
+  E,
+  O,
 }
-
-export type Inflection =
-  | "non-past"
-  | "non-past-polite"
-  | "past"
-  | "past-polite"
-  | "te"
-  | "potential"
-  | "passive"
-  | "causative"
-  | "causative-passive"
-  | "imperative";
 
 /**
  * to get the verb stem we must check if it is an irregular verb
@@ -43,40 +30,65 @@ export type Inflection =
  * @param verb
  * @returns
  */
-function getVerbStem(verb: Verb): string {
-  if (verb.slug === "する") {
+function getVerbStem(
+  verb: string,
+  group: Group,
+  endingVowel = EndingVowel.I
+): string {
+  function toA(syllable: string) {
+    switch (syllable) {
+      case `く`:
+        return `か`;
+    }
+    // return the A verion of a character
+  }
+
+  function toI(character: string) {
+    switch (character) {
+      case `う`:
+        return `い`;
+      case `く`:
+        return `き`;
+      case `す`:
+        return `し`;
+      case `つ`:
+        return `ち`;
+      case `ぬ`:
+        return `に`;
+      case `ぶ`:
+        return `び`;
+      case `む`:
+        return `み`;
+      case `る`:
+        return `り`;
+      case `ぐ`:
+        return `ぎ`;
+    }
+  }
+
+  function getGodanVerbStem(verb: string, endingVowel: EndingVowel) {
+    const start = verb.slice(0, -1);
+    const lastCharacter = verb.slice(-1);
+
+    const transformed = toA(lastCharacter);
+
+    return `${start}${transformed}`;
+  }
+
+  // depending on the group we'll have to branch off to figure out the correct
+  // ending syllable required
+  switch (group) {
+    // easiest option is ichidan since we just have to remove the る syllable
+    case Group.Ichidan:
+      return verb.slice(0, -1);
+    case Group.Godan:
+      return getGodanVerbStem(verb, endingVowel);
+  }
+
+  if (verb === "する") {
     return "し";
-  } else if (verb.slug === "くる") {
-    return "き";
-  }
-
-  if (verb.family === "ichidan") {
-    return verb.slug.slice(0, -1);
-  }
-
-  const lastCharacter = verb.slug.slice(-1);
-
-  switch (lastCharacter) {
-    case `う`:
-      return `い`;
-    case `く`:
-      return `き`;
-    case `す`:
-      return `し`;
-    case `つ`:
-      return `ち`;
-    case `ぬ`:
-      return `に`;
-    case `ぶ`:
-      return `び`;
-    case `む`:
-      return `み`;
-    case `る`:
-      return `り`;
-    case `ぐ`:
-      return `ぎ`;
-    default:
-      return verb.slug;
+  } else if (verb === "来る") {
+    return "来";
   }
 }
 
