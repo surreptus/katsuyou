@@ -5,6 +5,7 @@ export enum Group {
 }
 
 export enum Level {
+  Unworked,
   Beginner,
   Intermediate,
   Advanced,
@@ -36,5 +37,4 @@ export interface Lesson {
 export interface Verb {
   slug: string;
   group: Group;
-  senses: any[];
 }
