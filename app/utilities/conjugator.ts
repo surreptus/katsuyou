@@ -60,31 +60,31 @@ export function getPotentialForm(verb: string, group: Group) {
 export function inflect(verb: Verb, inflection: Inflection): string {
   switch (inflection) {
     // 食べる
-    case "non-past":
+    case Inflection.NonPast:
       return verb.slug;
     // 食べます
-    case "non-past-polite":
+    case Inflection.NonPastPolite:
       return `${getCombiningForm(verb.slug, verb.group)}ます`;
     // 食べた
-    case "past":
+    case Inflection.Past:
       return "";
     // 食べました
-    case "past-polite":
+    case Inflection.PastPolite:
       return `${getCombiningForm(verb.slug, verb.group)}ました`;
     // 食べて
-    case "te":
+    case Inflection.Te:
       return "";
     // 食べれる
-    case "potential":
+    case Inflection.Potential:
       return getPotentialForm(verb.slug, verb.group);
     // 食べられる
-    case "passive":
+    case Inflection.Passive:
       return "";
-    case "imperative":
+    case Inflection.Imperative:
       return "";
-    case "causative":
+    case Inflection.Causative:
       return "";
-    case "causative-passive":
+    case Inflection.CausativePassive:
       return "";
   }
 }
