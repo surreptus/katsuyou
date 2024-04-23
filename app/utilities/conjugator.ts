@@ -57,6 +57,13 @@ export function getPotentialForm(verb: string, group: Group) {
   }
 }
 
+/**
+ * inflects the given Verb entry with the provided inflection
+ *
+ * @param {Verb} verb
+ * @param {Inflection} inflection
+ * @returns {string} inflected string
+ */
 export function inflect(verb: Verb, inflection: Inflection): string {
   switch (inflection) {
     // 食べる
@@ -88,3 +95,5 @@ export function inflect(verb: Verb, inflection: Inflection): string {
       return "";
   }
 }
+
+export function negate(verb: Verb) {}
