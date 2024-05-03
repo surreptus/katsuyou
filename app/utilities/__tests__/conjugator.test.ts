@@ -1,21 +1,21 @@
 import { Group, Inflection } from "../../types";
-import { getCombiningForm, getPotentialForm, inflect } from "../conjugator";
+import { getPoliteStem, getPotentialForm, inflect } from "../conjugator";
 
-describe("getCombiningForm", () => {
+describe("getPoliteStem", () => {
   test("it should return the ichidan form", () => {
-    expect(getCombiningForm("食べる", Group.Ichidan)).toBe("食べ");
+    expect(getPoliteStem("食べる", Group.Ichidan)).toBe("食べ");
   });
 
   test("it should return the godan form", () => {
-    expect(getCombiningForm("飲む", Group.Godan)).toBe("飲み");
+    expect(getPoliteStem("飲む", Group.Godan)).toBe("飲み");
   });
 
   test("it should return the する form", () => {
-    expect(getCombiningForm("勉強する", Group.Irregular)).toBe("勉強し");
+    expect(getPoliteStem("勉強する", Group.Irregular)).toBe("勉強し");
   });
 
   test("it should return the 来る form", () => {
-    expect(getCombiningForm("来る", Group.Irregular)).toBe("来");
+    expect(getPoliteStem("来る", Group.Irregular)).toBe("来");
   });
 });
 
@@ -38,27 +38,53 @@ describe("getPotentialForm", () => {
 });
 
 describe("inflect", () => {
-  test("it should return the non-past form", () => {
-    expect(
-      inflect(
-        {
-          slug: "上げる",
-          group: Group.Ichidan,
-        },
-        Inflection.NonPast
-      )
-    ).toBe("上げる");
+  /**
+   * these tests aren't meant to be exhaustive, but to ensure that the correct case
+   * in the switch statemenet is used. the actual test for each of the stems / forms are
+   * captured in their own tests
+   */
+  describe("godan", () => {
+    const verb = {
+      slug: "飲む",
+      group: Group.Godan,
+    };
+
+    test("it should return the past form", () => {
+      expect(inflect(verb, Inflection.NonPast)).toBe("飲む");
+    });
+
+    test("it should return the non-past form", () => {
+      expect(inflect(verb, Inflection.Past)).toBe("飲んだ");
+    });
+
+    test("it should return the non-past polite form", () => {
+      expect(inflect(verb, Inflection.NonPastPolite)).toBe("飲みます");
+    });
+
+    test("it should return the past polite form", () => {
+      expect(inflect(verb, Inflection.PastPolite)).toBe("飲みました");
+    });
+
+    test("it should return the te form", () => {
+      expect(inflect(verb, Inflection.Te)).toBe("飲んで");
+    });
+
+    test("it should return the potential form", () => {
+      expect(inflect(verb, Inflection.Potential)).toBe("飲める");
+    });
   });
 
-  test("it should return the non-past polite form", () => {
-    expect(
-      inflect({ slug: "探す", group: Group.Godan }, Inflection.NonPastPolite)
-    ).toBe("探します");
-  });
-
-  test("it should return the past polite form", () => {
-    expect(
-      inflect({ slug: "曲がる", group: Group.Godan }, Inflection.PastPolite)
-    ).toBe("曲がりました");
+  describe("ichidan", () => {
+    test("it should return the non-past form", () => {
+      expect(
+        inflect(
+          {
+            slug: "上げる",
+            group: Group.Ichidan,
+          },
+          Inflection.NonPast
+        )
+      ).toBe("上げる");
+    });
   });
 });

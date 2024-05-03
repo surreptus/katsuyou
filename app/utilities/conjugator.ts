@@ -16,6 +16,45 @@ Imperative 	食べろ 	食べるな
 */
 
 /**
+ * returns the stem form that goes with the te and simple past forms
+ *
+ * @param verb
+ * @param group
+ * @returns
+ */
+export function getCombiningStem(verb: string, group: Group): string {
+  let ending = verb.slice(-1);
+  let rest = verb.slice(0, -1);
+
+  switch (group) {
+    // 生きる→生き
+    case Group.Ichidan:
+      return rest;
+    // 飲むー>飲んだ
+    case Group.Godan:
+      // depending on the ending we want to append a new character
+      switch (ending) {
+        case "ぐ":
+        case "く":
+          return `${rest}い`;
+        case "む":
+        case "る":
+        case "ぶ":
+          return `${rest}ん`;
+        case "う":
+          return `${rest}っ`;
+      }
+    // for irregular verbs, we just have two options, suru verb in which we need to preserve
+    // the preceding noun, or just 来る
+    case Group.Irregular:
+      ending = verb.slice(-2);
+      rest = verb.slice(0, -2);
+
+      return ending == "する" ? `${rest}し` : "来";
+  }
+}
+
+/**
  * to get the verb stem we must check if it is an irregular verb
  * if it is reuturn the exception
  * if it is not we must check if it is a godan or ichidan verb
@@ -25,7 +64,7 @@ Imperative 	食べろ 	食べるな
  * @param group Group - the group that the verb belongs to, e.g. ichidan
  * @returns
  */
-export function getCombiningForm(verb: string, group: Group): string {
+export function getPoliteStem(verb: string, group: Group): string {
   switch (group) {
     // 食べる→食べ
     case Group.Ichidan:
@@ -41,7 +80,14 @@ export function getCombiningForm(verb: string, group: Group): string {
   }
 }
 
-export function getPotentialForm(verb: string, group: Group) {
+/**
+ * returns the stem for the potential form, e.g. 食べよう
+ *
+ * @param verb
+ * @param group
+ * @returns
+ */
+export function getPotentialForm(verb: string, group: Group): string {
   switch (group) {
     // 描ける→描けれる
     case Group.Ichidan:
@@ -54,6 +100,24 @@ export function getPotentialForm(verb: string, group: Group) {
       return verb.slice(-2) == `する`
         ? `${verb.slice(0, -2)}できる`
         : `来られる`;
+  }
+}
+
+export function getTeForm(verb: string, group: Group) {
+  const ending = verb.slice(0, -1);
+
+  switch (group) {
+    case Group.Ichidan:
+      return ``;
+    case Group.Godan:
+      switch (ending) {
+        case "":
+          return ``;
+        case "":
+          return ``;
+      }
+    case Group.Irregular:
+      return ``;
   }
 }
 
@@ -71,29 +135,48 @@ export function inflect(verb: Verb, inflection: Inflection): string {
       return verb.slug;
     // 食べます
     case Inflection.NonPastPolite:
-      return `${getCombiningForm(verb.slug, verb.group)}ます`;
+      return `${getPoliteStem(verb.slug, verb.group)}ます`;
     // 食べた
     case Inflection.Past:
-      return "";
+      return `${getCombiningStem(verb.slug, verb.group)}た`;
     // 食べました
     case Inflection.PastPolite:
-      return `${getCombiningForm(verb.slug, verb.group)}ました`;
+      return `${getPoliteStem(verb.slug, verb.group)}ました`;
     // 食べて
     case Inflection.Te:
-      return "";
+      return `${getCombiningStem(verb.slug, verb.group)}て`;
     // 食べれる
     case Inflection.Potential:
       return getPotentialForm(verb.slug, verb.group);
     // 食べられる
-    case Inflection.Passive:
-      return "";
-    case Inflection.Imperative:
-      return "";
     case Inflection.Causative:
-      return "";
+    // 食べさせられる
     case Inflection.CausativePassive:
-      return "";
+    // 食べられる
+    case Inflection.Passive:
+    // 食べろ
+    case Inflection.Imperative:
+    default:
+      throw new Error("not implemented");
   }
 }
 
-export function negate(verb: Verb) {}
+/**
+ * returns the negative form of the given inflection, this is a bit simplistic
+ * since we don't offer past passive, causatives.
+ *
+ * @param verb
+ * @param inflection
+ */
+export function negate(verb: Verb, inflection: Inflection) {
+  switch (inflection) {
+    case Inflection.NonPast:
+    case Inflection.Past:
+    case Inflection.PastPolite:
+    case Inflection.NonPastPolite:
+    case Inflection.Te:
+    case Inflection.Potential:
+    default:
+      throw new Error("not yet implemented");
+  }
+}

@@ -17,13 +17,13 @@ export default function Progress({ percent }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 16,
+    height: 8,
     display: "flex",
     flexDirection: "row",
     backgroundColor: "lightgray",
   },
   bar: {
     height: "100%",
-    backgroundColor: "red",
+    backgroundColor: "orange",
   },
 });

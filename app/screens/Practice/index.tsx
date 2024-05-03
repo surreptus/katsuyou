@@ -60,18 +60,23 @@ interface PracticeScreenProps {
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
   const [current, setCurrent] = useState(getNextLesson());
+  const [progress, setProgress] = useState(0);
 
   function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
     resetForm();
+    setProgress(progress + 1);
     setCurrent(getNextLesson());
   }
 
+  const reading = current.japanese[0].reading;
+
   return (
     <View style={styles.container}>
-      <Progress percent="90" />
+      <Progress percent={`${Math.round((progress / 25) * 100)}`} />
 
       <View>
         <Heading>{current.slug}</Heading>
+        <Text>{reading}</Text>
 
         <View style={styles.modifiers}>
           <Chip label="Past" />
@@ -113,8 +118,6 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
               style={[styles.input, isValid ? styles.valid : styles.invalid]}
             />
 
-            <Button title="Get Hint" />
-
             <View style={styles.difficulty}>
               {dirty && isValid && (
                 <>
@@ -144,8 +147,9 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 24,
     alignItems: "stretch",
+    paddingTop: "20%",
     padding: 8,
-    justifyContent: "center",
+    justifyContent: "flex-start",
   },
   modifiers: {
     display: "flex",
