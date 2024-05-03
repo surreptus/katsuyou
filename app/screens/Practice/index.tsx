@@ -1,81 +1,39 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Button } from "react-native";
 import { Chip } from "../../components/Chip";
 import Heading from "../../components/Heading";
 import { Formik, FormikHelpers } from "formik";
 import Text from "../../components/Text";
 import * as yup from "yup";
-import { getNextLesson } from "./helpers";
+import { useLessons } from "./helpers";
 import Progress from "../../components/Progress";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { Lesson } from "../../types";
-import verbs from "../../data/verbs.json";
-
-/**
- * lessons are a unit of conjugation practice. they include a the base verb, the inflection,
- * level of familiarity, and due date.
- *
- * @returns
- */
-function useLessons() {
-  const [lessons, setLessons] = useState([]);
-  const { getItem, setItem } = useAsyncStorage("@lessons");
-
-  useEffect(() => {
-    async function fetchLessons() {
-      const data = await getItem();
-
-      setLessons(data ? JSON.parse(data) : []);
-    }
-  }, []);
-
-  function findNextOverdueLesson(lessons: Lesson[]) {
-    return lessons.find((lesson) => new Date(lesson.dueAt) <= new Date());
-  }
-
-  function getNextLessonFromVerbs() {
-    return verbs.find((verb) => {
-      const alreadyLearning = lessons.find(
-        (lesson) => lesson.slug === verb.slug
-      )!!;
-
-      return;
-    });
-  }
-
-  function getNextLesson() {
-    return findNextOverdueLesson(lessons) ?? getNextLessonFromVerbs();
-  }
-
-  return { getNextLesson };
-}
+import { NavigationAction } from "@react-navigation/native";
 
 interface FormValues {
   guess: string;
 }
 
 interface PracticeScreenProps {
-  navigation: any;
+  navigation: NavigationAction;
 }
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
-  const [current, setCurrent] = useState(getNextLesson());
+  const { currentLesson, getNextLesson } = useLessons();
   const [progress, setProgress] = useState(0);
 
   function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
     resetForm();
     setProgress(progress + 1);
-    setCurrent(getNextLesson());
   }
 
-  const reading = current.japanese[0].reading;
+  const reading = currentLesson.japanese[0].reading;
 
   return (
     <View style={styles.container}>
       <Progress percent={`${Math.round((progress / 25) * 100)}`} />
 
       <View>
-        <Heading>{current.slug}</Heading>
+        <Heading>{currentLesson.slug}</Heading>
         <Text>{reading}</Text>
 
         <View style={styles.modifiers}>
@@ -84,7 +42,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         </View>
       </View>
 
-      <Text>{current.senses[0].english_definitions} </Text>
+      <Text>{currentLesson.senses[0].english_definitions} </Text>
 
       <Formik
         enableReinitialize
@@ -92,7 +50,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
         validationSchema={yup.object({
           guess: yup
             .string()
-            .matches(new RegExp(current.slug), "Must match")
+            .matches(new RegExp(currentLesson.slug), "Must match")
             .required(),
         })}
         onSubmit={handleSubmit}

@@ -4,13 +4,9 @@ export enum Group {
   Irregular = "irregular",
 }
 
-export enum Level {
-  Unworked,
-  Beginner,
-  Intermediate,
-  Advanced,
-  Master,
-  Burned,
+export interface Verb {
+  slug: string;
+  group: Group;
 }
 
 export enum Inflection {
@@ -26,15 +22,23 @@ export enum Inflection {
   Imperative = "imperative",
 }
 
+export enum Level {
+  Unworked,
+  Beginner,
+  Intermediate,
+  Advanced,
+  Master,
+  Burned,
+}
+
 export interface Lesson {
   slug: string;
   inflection: Inflection;
   level: Level;
   dueAt: string;
-  isNegative: boolean;
 }
 
-export interface Verb {
-  slug: string;
-  group: Group;
+export enum Difficulty {
+  Easy,
+  Hard,
 }
