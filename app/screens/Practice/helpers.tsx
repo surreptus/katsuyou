@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import verbs from "../../data/verbs.json";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { Difficulty, Inflection, Lesson, Level, Verb } from "../../types";
+import {
+  Difficulty,
+  Group,
+  Inflection,
+  Lesson,
+  Level,
+  Verb,
+} from "../../types";
 
 /**
  * lessons are a unit of conjugation practice. they include a the base verb, the inflection,
@@ -10,8 +17,8 @@ import { Difficulty, Inflection, Lesson, Level, Verb } from "../../types";
  * @returns
  */
 export function useLessons() {
-  const [lessons, setLessons] = useState([]);
-  const [currentLesson, setCurrentLesson] = useState(null);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [currentLesson, setCurrentLesson] = useState<Lesson>(null);
   const { getItem, setItem } = useAsyncStorage("@lessons");
 
   // when we boot up the practice page, attempt to parse out the lessons from storage
@@ -22,8 +29,11 @@ export function useLessons() {
       const data = await getItem();
 
       const parsed = data ? JSON.parse(data) : [];
+
       setLessons(parsed);
-      setCurrentLesson(findNextOverdueLesson(parsed) ?? createNextLesson());
+      console.log(createNextLesson());
+
+      setCurrentLesson(createNextLesson());
     }
 
     fetchLessons();
@@ -43,10 +53,15 @@ export function useLessons() {
    *
    * @returns
    */
-  const createNextLesson = () =>
-    toLesson(
-      verbs.find((verb) => !lessons.find((lesson) => lesson.slug === verb.slug))
+  const createNextLesson = () => {
+    const verb = verbs.find(
+      (verb) => !lessons.find((lesson) => lesson.slug === verb.slug)
     );
+    return toLesson({
+      slug: verb.slug,
+      group: Group.Ichidan,
+    });
+  };
 
   /**
    * progresses the given lesson with the stated difficulty

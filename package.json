@@ -9,7 +9,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "test": "jest"
+    "test": "jest",
+    "verbs:fetch": "node ./scripts/fetch-verbs.mjs",
+    "verbs:cleanup": "node ./scripts/cleanup-data.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",

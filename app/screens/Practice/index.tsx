@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Button,
+  KeyboardAvoidingView,
+  InputAccessoryView,
+} from "react-native";
 import { Chip } from "../../components/Chip";
 import Heading from "../../components/Heading";
 import { Formik, FormikHelpers } from "formik";
@@ -8,6 +15,7 @@ import * as yup from "yup";
 import { useLessons } from "./helpers";
 import Progress from "../../components/Progress";
 import { NavigationAction } from "@react-navigation/native";
+import { theme } from "../../theme";
 
 interface FormValues {
   guess: string;
@@ -18,7 +26,7 @@ interface PracticeScreenProps {
 }
 
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
-  const { currentLesson, getNextLesson } = useLessons();
+  const { currentLesson, progressLesson } = useLessons();
   const [progress, setProgress] = useState(0);
 
   function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
@@ -26,77 +34,84 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
     setProgress(progress + 1);
   }
 
-  const reading = currentLesson.japanese[0].reading;
+  if (!currentLesson) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-      <Progress percent={`${Math.round((progress / 25) * 100)}`} />
+    <Formik
+      enableReinitialize
+      initialValues={{ guess: "" }}
+      validationSchema={yup.object({
+        guess: yup
+          .string()
+          .matches(new RegExp(currentLesson.slug), "Must match")
+          .required(),
+      })}
+      onSubmit={handleSubmit}
+    >
+      {({ isValid, dirty, handleChange, handleBlur, handleSubmit, values }) => (
+        <>
+          <KeyboardAvoidingView behavior="height" style={styles.container}>
+            <Progress percent={`${Math.round((progress / 25) * 100)}`} />
 
-      <View>
-        <Heading>{currentLesson.slug}</Heading>
-        <Text>{reading}</Text>
+            <View>
+              <Heading>{currentLesson.slug}</Heading>
+              <Text>test</Text>
 
-        <View style={styles.modifiers}>
-          <Chip label="Past" />
-          <Chip label="Polite" />
-        </View>
-      </View>
+              <View style={styles.modifiers}>
+                <Chip label="Past" />
+                <Chip label="Polite" />
+              </View>
+            </View>
 
-      <Text>{currentLesson.senses[0].english_definitions} </Text>
+            <Text>hello</Text>
+            <View>
+              <TextInput
+                inputAccessoryViewID="guess"
+                onChangeText={handleChange("guess")}
+                onBlur={handleBlur("guess")}
+                value={values.guess}
+                autoComplete="off"
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholder="Guess"
+                inputMode="text"
+                keyboardAppearance="default"
+                keyboardType="visible-password"
+                style={[styles.input, isValid ? styles.valid : styles.invalid]}
+              />
+            </View>
+          </KeyboardAvoidingView>
+          <InputAccessoryView backgroundColor="#222" nativeID="guess">
+            <View style={styles.accessory}>
+              <Button title="Clear" />
 
-      <Formik
-        enableReinitialize
-        initialValues={{ guess: "" }}
-        validationSchema={yup.object({
-          guess: yup
-            .string()
-            .matches(new RegExp(currentLesson.slug), "Must match")
-            .required(),
-        })}
-        onSubmit={handleSubmit}
-      >
-        {({
-          isValid,
-          dirty,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-        }) => (
-          <View>
-            <TextInput
-              onChangeText={handleChange("guess")}
-              onBlur={handleBlur("guess")}
-              value={values.guess}
-              autoCorrect={false}
-              placeholder="Guess"
-              enterKeyHint="next"
-              autoComplete="off"
-              autoCapitalize="none"
-              style={[styles.input, isValid ? styles.valid : styles.invalid]}
-            />
+              {!isValid && <Button title="Get Hint" />}
 
-            <View style={styles.difficulty}>
-              {dirty && isValid && (
-                <>
-                  <Button
-                    color="red"
-                    onPress={handleSubmit as any}
-                    title="Hard"
-                  />
-                  <Button title="Definition" />
-                  <Button
-                    color="green"
-                    onPress={handleSubmit as any}
-                    title="Easy"
-                  />
-                </>
+              {isValid && (
+                <View style={styles.difficulty}>
+                  {dirty && isValid && (
+                    <>
+                      <Button
+                        color="red"
+                        onPress={handleSubmit as any}
+                        title="Hard"
+                      />
+                      <Button
+                        color="green"
+                        onPress={handleSubmit as any}
+                        title="Easy"
+                      />
+                    </>
+                  )}
+                </View>
               )}
             </View>
-          </View>
-        )}
-      </Formik>
-    </View>
+          </InputAccessoryView>
+        </>
+      )}
+    </Formik>
   );
 };
 
@@ -109,6 +124,11 @@ const styles = StyleSheet.create({
     padding: 8,
     justifyContent: "flex-start",
   },
+  accessory: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   modifiers: {
     display: "flex",
     flexDirection: "row",
@@ -118,7 +138,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     borderRadius: 50,
-    backgroundColor: "orange",
+    backgroundColor: theme.dark.danger,
     paddingHorizontal: 12,
   },
   input: {
@@ -130,15 +150,12 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   invalid: {
-    color: "red",
+    color: theme.dark.danger,
   },
   valid: {
-    color: "green",
+    color: theme.dark.success,
   },
   difficulty: {
-    justifyContent: "space-around",
-    height: 140,
-    justifySelf: "flex-end",
     flexDirection: "row",
   },
 });

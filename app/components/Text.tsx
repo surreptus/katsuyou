@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text } from "react-native";
+import { PlatformColor, StyleSheet, Text } from "react-native";
 
 function getStyles(variant: Props["variant"]) {
   switch (variant) {

@@ -26,7 +26,7 @@ const Item = memo(function Item({ item, handleNavigate }: ItemProps) {
     <Pressable onPress={() => handleNavigate(item.slug)} key={item.slug}>
       <View style={styles.item}>
         <Text>{item.slug}</Text>
-        <Text variant="caption">{item.senses[0].english_definitions[0]}</Text>
+        <Text variant="caption">{item.group}</Text>
       </View>
     </Pressable>
   );
