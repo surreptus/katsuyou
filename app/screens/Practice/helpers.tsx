@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import verbs from "../../data/verbs.json";
+import lessons from "../../data/lessons.json";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import {
   Difficulty,
@@ -9,6 +10,7 @@ import {
   Level,
   Verb,
 } from "../../types";
+import { inflect } from "../../utilities/conjugator";
 
 /**
  * lessons are a unit of conjugation practice. they include a the base verb, the inflection,
@@ -19,7 +21,7 @@ import {
 export function useLessons() {
   const [lessons, setLessons] = useState<Lesson[]>([]);
   const [currentLesson, setCurrentLesson] = useState<Lesson>(null);
-  const { getItem, setItem } = useAsyncStorage("@lessons");
+  const { getItem, setItem } = useAsyncStorage("@reviews");
 
   // when we boot up the practice page, attempt to parse out the lessons from storage
   // if we have an overdue lesson set it to the current one, otherwise get the next lesson

@@ -1,3 +1,6 @@
+/**
+ * this file has two main products, a object map 
+ */
 import fs from 'node:fs/promises'
 
 const DEFAULT_LEVEL = 60
@@ -39,14 +42,12 @@ async function cleanupVerbs() {
         if (!isStandaloneVerb(verb)) return carry
 
         // there are some duplicate entries unfortunately in the datset
-        if (carry.find(existing => existing.slug === verb.slug)) {
-            return carry
-        }
+        if (carry[verb.slug]) return carry
 
         // find the wanikani level to use for sorting the verbs
         const lowestWanikaniLevel = getLowestWanikaniLevel(verb)
 
-        return carry.concat({
+        carry[verb.slug] = {
             wanikaniLevel: lowestWanikaniLevel,
             slug: verb.slug,
             group: getGroupFromSenses(verb),
@@ -57,10 +58,17 @@ async function cleanupVerbs() {
                 partsOfSpeech: sense.partsOfSpeech,
                 tags: sense.tags
             }))
-        })
-    }, [])
+        }
+
+        return carry;
+    }, {})
 }
 
 const result = await cleanupVerbs()
 
+const lessons = [...Object.values(result)]
+    .sort((a, b) => a.wanikaniLevel - b.wanikaniLevel)
+    .map(entry => entry.slug)
+
 fs.writeFile('./app/data/verbs.json', JSON.stringify(result))
+fs.writeFile('./app/data/lessons.json', JSON.stringify(lessons))

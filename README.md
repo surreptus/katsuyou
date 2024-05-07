@@ -48,11 +48,11 @@ Planning to support:
 - causative
 - causative passive
 
-These are largely based on the inflections on [Jisho](), as they offer a good range, and don't repeat the rules too much.
+These are largely based on the inflections on [Jisho](https://jisho.org/), as they offer a good range, and don't repeat the rules too much.
 
-#### 2. Lessons
+#### 2. Reviews
 
-Lessons are be drawn from the verbs file in order of frequency. A lesson consists of the following attributes:
+Reviews are be drawn from the verbs file in order of frequency (lessons). A reviews consists of the following attributes:
 
 | property   | type       | description                                                 |
 | ---------- | ---------- | ----------------------------------------------------------- |
@@ -61,9 +61,17 @@ Lessons are be drawn from the verbs file in order of frequency. A lesson consist
 | inflection | Inflection | an enum for inflections such as NonPast, Past, Polite, etc. |
 | dueAt      | string     | ISO-8601 formatted datetime when the next review is due     |
 
-When you first start a practice session, we will generate the first lesson using a verb with a random inflection. Each time you progress easily it will increase the lesson's level, and set a scaling due at time in the future. If you find the lesson difficult, it will set a due at time within 1 minute so you can re-review it until it is easy.
+When you first start a practice session, we will generate the first review using a verb with a random inflection. Each time you progress easily it will increase the review's level, and set a scaling due at time in the future. If you find the review difficult, it will set a due at time within 1 minute so you can re-review it until it is easy.
 
-// todo: maybe put flow diagram here
+```mermaid
+graph LR;
+    review(Review) --> easy{Easy};
+    easy --> new(Next Review);
+    easy -- increase level --> review
+    review --> hard{Hard};
+    hard -- lower level --> review
+    hard --> repeat(Repeat Review)
+```
 
 #### Wrap Up Mode
 

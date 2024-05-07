@@ -5,6 +5,13 @@ export enum Group {
 }
 
 export interface Verb {
+  wanikaniLevel: number;
+  reading: string;
+  jlpt: string[];
+  senses: {
+    definitions: string[];
+    tags: string[];
+  };
   slug: string;
   group: Group;
 }

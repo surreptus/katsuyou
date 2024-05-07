@@ -16,6 +16,9 @@ import { useLessons } from "./helpers";
 import Progress from "../../components/Progress";
 import { NavigationAction } from "@react-navigation/native";
 import { theme } from "../../theme";
+import verbs from "../../data/verbs.json";
+import { Verb } from "../../types";
+import { inflect } from "../../utilities/conjugator";
 
 interface FormValues {
   guess: string;
@@ -38,6 +41,8 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
     return null;
   }
 
+  const verb = verbs[currentLesson.slug] as Verb;
+
   return (
     <Formik
       enableReinitialize
@@ -45,7 +50,10 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
       validationSchema={yup.object({
         guess: yup
           .string()
-          .matches(new RegExp(currentLesson.slug), "Must match")
+          .matches(
+            new RegExp(inflect(verb, currentLesson.inflection)),
+            "Must match"
+          )
           .required(),
       })}
       onSubmit={handleSubmit}
@@ -57,7 +65,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
 
             <View>
               <Heading>{currentLesson.slug}</Heading>
-              <Text>test</Text>
+              <Text>{verb.reading}</Text>
 
               <View style={styles.modifiers}>
                 <Chip label="Past" />
@@ -65,7 +73,7 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
               </View>
             </View>
 
-            <Text>hello</Text>
+            <Text>{verb.senses[0].definitions}</Text>
             <View>
               <TextInput
                 inputAccessoryViewID="guess"

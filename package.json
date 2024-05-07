@@ -11,7 +11,7 @@
     "web": "expo start --web",
     "test": "jest",
     "verbs:fetch": "node ./scripts/fetch-verbs.mjs",
-    "verbs:cleanup": "node ./scripts/cleanup-data.mjs"
+    "verbs:transform": "node ./scripts/transform-data.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.18.2",
