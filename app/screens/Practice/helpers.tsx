@@ -19,8 +19,8 @@ import { inflect } from "../../utilities/conjugator";
  * @returns
  */
 export function useLessons() {
-  const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [currentLesson, setCurrentLesson] = useState<Lesson>(null);
+  const [learning, setLearning] = useState<Lesson[]>([]);
+  const [current, setCurrent] = useState<number>(null);
   const { getItem, setItem } = useAsyncStorage("@reviews");
 
   // when we boot up the practice page, attempt to parse out the lessons from storage
@@ -32,7 +32,7 @@ export function useLessons() {
 
       const parsed = data ? JSON.parse(data) : [];
 
-      setLessons(parsed);
+      setLearning(parsed);
       console.log(createNextLesson());
 
       setCurrentLesson(createNextLesson());
@@ -48,7 +48,7 @@ export function useLessons() {
    * @returns
    */
   const findNextOverdueLesson = (lessons: Lesson[]) =>
-    lessons.find((lesson) => new Date(lesson.dueAt) <= new Date());
+    lessons.findIndex((lesson) => new Date(lesson.dueAt) <= new Date());
 
   /**
    * create a new lesson from a verb we're not currently learning
@@ -56,13 +56,13 @@ export function useLessons() {
    * @returns
    */
   const createNextLesson = () => {
-    const verb = verbs.find(
-      (verb) => !lessons.find((lesson) => lesson.slug === verb.slug)
+    const key = lessons.find(
+      (lesson) => !learning.find((learning) => learning.slug === lesson)
     );
-    return toLesson({
-      slug: verb.slug,
-      group: Group.Ichidan,
-    });
+
+    const verb = verbs[key] as Verb;
+
+    return toLesson(verb);
   };
 
   /**
@@ -73,10 +73,10 @@ export function useLessons() {
     const updated = lessons;
 
     await setItem(JSON.stringify(updated));
-    setCurrentLesson(findNextOverdueLesson(lessons) ?? createNextLesson());
+    setCurrentLesson(findNextOverdueLesson(learning) ?? createNextLesson());
   };
 
-  return { currentLesson, progressLesson };
+  return { currentLesson: lessons[current], progressLesson };
 }
 
 const toLesson = (verb: Verb): Lesson => ({
