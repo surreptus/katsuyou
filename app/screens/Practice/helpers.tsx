@@ -32,10 +32,11 @@ export function useLessons() {
 
       const parsed = data ? JSON.parse(data) : [];
 
-      setLearning(parsed);
-      console.log(createNextLesson());
+      console.log(parsed);
 
-      setCurrentLesson(null);
+      setLearning(parsed);
+
+      setCurrentLesson(parsed[0]?.id ?? 0);
     }
 
     fetchLessons();
