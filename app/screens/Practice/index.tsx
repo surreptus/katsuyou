@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   View,
@@ -6,7 +6,6 @@ import {
   Button,
   KeyboardAvoidingView,
   InputAccessoryView,
-  TouchableOpacity,
 } from "react-native";
 import { Chip } from "../../components/Chip";
 import Heading from "../../components/Heading";
@@ -19,12 +18,6 @@ import { NavigationAction } from "@react-navigation/native";
 import { theme } from "../../theme";
 import verbs from "../../data/verbs.json";
 import { Verb } from "../../types";
-import Voice, {
-  type SpeechEndEvent,
-  type SpeechErrorEvent,
-  type SpeechResultsEvent,
-  type SpeechStartEvent,
-} from "@react-native-voice/voice";
 import { inflect } from "../../utilities/conjugator";
 
 interface FormValues {
@@ -38,70 +31,14 @@ interface PracticeScreenProps {
 export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
   const { currentLesson, progressLesson } = useLessons();
   const [progress, setProgress] = useState(0);
-  const [isRecognitionEnable, setRecognitionEnable] = useState(false);
-  const [isMicActive, setMicActive] = useState(false);
-  const [value, setValue] = useState("");
-
-  const startRecognition = useCallback(
-    async () => await Voice.start("pt-BR"),
-    []
-  );
-
-  const cancelRecognition = useCallback(async () => await Voice.cancel(), []);
-
-  const stopRecognition = useCallback(async () => await Voice.stop(), []);
-
-  const onSpeechStart = (event: SpeechStartEvent) => setMicActive(true);
-
-  const onSpeechResults = (event: SpeechResultsEvent) => {
-    const value = event.value?.shift();
-    if (!value) return;
-    setValue(value);
-  };
-
-  const onSpeechError = (event: SpeechErrorEvent) => {
-    console.error(event.error);
-    setMicActive(false);
-  };
-
-  const onSpeechEnd = (event: SpeechEndEvent) => setMicActive(false);
-
-  const getSpeechRecognitionServices = useCallback(async () => {
-    try {
-      const recognitionServices = await Voice.getSpeechRecognitionServices();
-
-      const hasRecognitionServices =
-        Array.isArray(recognitionServices) && recognitionServices.length > 0;
-
-      setRecognitionEnable(hasRecognitionServices);
-    } catch (error) {
-      setRecognitionEnable(false);
-      console.error(error);
-    }
-  }, []);
-
-  const createListeners = useCallback(async () => {
-    Voice.onSpeechStart = onSpeechStart;
-    Voice.onSpeechResults = onSpeechResults;
-    Voice.onSpeechError = onSpeechError;
-    Voice.onSpeechEnd = onSpeechEnd;
-  }, []);
-
-  const removeListeners = useCallback(async () => {
-    await Voice.destroy();
-    Voice.removeAllListeners();
-  }, []);
-
-  useEffect(() => {
-    getSpeechRecognitionServices().then(createListeners);
-    return () => {
-      removeListeners();
-    };
-  }, []);
 
   function handleSubmit(formValues, { resetForm }: FormikHelpers<FormValues>) {
     resetForm();
     setProgress(progress + 1);
+  }
+
+  if (!currentLesson) {
+    return null;
   }
 
   const verb = verbs[currentLesson] as Verb;
@@ -172,22 +109,6 @@ export const PracticeScreen = ({ navigation }: PracticeScreenProps) => {
                   )}
                 </View>
               )}
-
-              <TouchableOpacity
-                disabled={!isRecognitionEnable}
-                onPress={isMicActive ? stopRecognition : startRecognition}
-                style={{
-                  padding: 16,
-                  borderRadius: 12,
-                  backgroundColor: !isRecognitionEnable ? "#333" : "#fff",
-                }}
-              >
-                {isMicActive ? (
-                  <Text>Stop Recording</Text>
-                ) : (
-                  <Text>Start recording</Text>
-                )}
-              </TouchableOpacity>
             </View>
           </InputAccessoryView>
         </>
