@@ -20,7 +20,7 @@ import { inflect } from "../../utilities/conjugator";
  */
 export function useLessons() {
   const [learning, setLearning] = useState<Lesson[]>([]);
-  const [current, setCurrent] = useState<number>(null);
+  const [current, setCurrentLesson] = useState<number>(null);
   const { getItem, setItem } = useAsyncStorage("@reviews");
 
   // when we boot up the practice page, attempt to parse out the lessons from storage
@@ -35,7 +35,7 @@ export function useLessons() {
       setLearning(parsed);
       console.log(createNextLesson());
 
-      setCurrentLesson(createNextLesson());
+      setCurrentLesson(null);
     }
 
     fetchLessons();
@@ -73,7 +73,7 @@ export function useLessons() {
     const updated = lessons;
 
     await setItem(JSON.stringify(updated));
-    setCurrentLesson(findNextOverdueLesson(learning) ?? createNextLesson());
+    setCurrentLesson(null);
   };
 
   return { currentLesson: lessons[current], progressLesson };

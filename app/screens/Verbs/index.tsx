@@ -39,7 +39,7 @@ const List = ({ navigation }) => {
     setFilter(text);
   }
 
-  const filtered = verbs.filter((verb) => verb.slug.includes(filter));
+  const filtered = [];
 
   function handlePress(slug: string) {
     return navigation.push("Show", { slug });
