@@ -1,12 +1,10 @@
 name: build and test the project
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
 
 jobs:
-  # Single deploy job since we're just deploying
   deploy:
     runs-on: ubuntu-latest
     steps:
