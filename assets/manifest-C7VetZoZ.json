@@ -1,0 +1,15 @@
+{
+  "name": "Katsuyou",
+  "short_name": "Katsuyou",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "An application to learn and practice Japanese verb conjugations",
+  "icons": [
+    {
+      "src": "src/assets/react.svg",
+      "sizes": "48x48",
+      "type": "image/svg"
+    }
+  ]
+}
