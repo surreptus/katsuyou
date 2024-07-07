@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { Practice } from "./pages/Practice";
 import { Settings } from "./pages/Settings";
 import { Vocabulary } from "./pages/Vocabulary";
+import { Show } from "./pages/Vocabulary/Show";
 
 const router = createBrowserRouter(
   [
@@ -16,6 +17,10 @@ const router = createBrowserRouter(
     {
       path: "/vocabulary",
       element: <Vocabulary />,
+    },
+    {
+      path: "/vocabulary/:slug",
+      element: <Show />,
     },
   ],
   {
