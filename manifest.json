@@ -3,7 +3,7 @@
   "short_name": "Katsuyou",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#fff",
+  "background_color": "#303030",
   "description": "An application to learn and practice Japanese verb conjugations",
   "icons": [
     {

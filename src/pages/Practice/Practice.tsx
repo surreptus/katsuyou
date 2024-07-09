@@ -10,14 +10,15 @@ import {
   VStack,
   Text,
 } from "@chakra-ui/react";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useState } from "react";
 import { Mic } from "react-feather";
-import { inflect, Inflection } from "@surreptus/japanese-conjugator";
+import { inflect } from "@surreptus/japanese-conjugator";
 import * as yup from "yup";
 
 import { SORTED_VERBS } from "./constants";
 import verbs from "../../data/verbs.json";
+import { getRandomInflection } from "./helpers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VERBS = verbs as any;
@@ -27,6 +28,7 @@ const completed = [];
 interface Lesson {
   slug: string;
   answer: string;
+  inflection: string;
 }
 
 const INITIAL_VALUES = {
@@ -39,19 +41,24 @@ interface FormValues {
 
 function generateLesson() {
   const next = SORTED_VERBS.slice(completed.length)[0];
+  const inflection = getRandomInflection();
   completed.push(next.slug);
   return {
     slug: next.slug,
-    answer: inflect(next.slug, Inflection.Past),
+    answer: inflect(next.slug, inflection),
+    inflection,
   };
 }
 
 export function Practice() {
   const [lesson, setLesson] = useState<Lesson>(generateLesson());
 
-  const handleSubmit = (values: FormValues) => {
-    console.log(values);
+  const handleSubmit = (
+    _values: FormValues,
+    { resetForm }: FormikHelpers<FormValues>
+  ) => {
     setLesson(generateLesson());
+    resetForm();
   };
 
   const schema = yup.object().shape({
@@ -78,7 +85,7 @@ export function Practice() {
               <Heading>{lesson.slug}</Heading>
 
               <Text>
-                {Inflection.Past} {VERBS[lesson.slug].reading}
+                {lesson.inflection} {VERBS[lesson.slug].reading}
               </Text>
 
               <Badge colorScheme="green">Verb</Badge>
