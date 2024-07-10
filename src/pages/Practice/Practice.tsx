@@ -9,9 +9,10 @@ import {
   Progress,
   VStack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Field, Form, Formik, FormikHelpers } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mic } from "react-feather";
 import { inflect } from "@surreptus/japanese-conjugator";
 import * as yup from "yup";
@@ -22,6 +23,9 @@ import { getRandomInflection } from "./helpers";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VERBS = verbs as any;
+
+const SpeechRecognition =
+  window.SpeechRecognition || window.webkitSpeechRecognition;
 
 const completed = [];
 
@@ -50,8 +54,34 @@ function generateLesson() {
   };
 }
 
+/**
+ * 
+const grammar = `#JSGF V1.0; grammar colors; public <color> = たべました | たべませんでした | たべませんでしたか;`;
+
+const recognition = new SpeechRecognition();
+const speechRecognitionList = new SpeechGrammarList();
+speechRecognitionList.addFromString(grammar, 1);
+recognition.grammars = speechRecognitionList;
+recognition.lang = "ja-JP";
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+ */
+
 export function Practice() {
   const [lesson, setLesson] = useState<Lesson>(generateLesson());
+  const [results] = useState<string[]>([]);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    /*
+    recognition.onresult = (event: any) => {
+      const color = event.results[0][0].transcript;
+      console.log(color);
+      setResults(color);
+      console.log(`Confidence: ${event.results[0][0].confidence}`);
+    };
+    */
+  });
 
   const handleSubmit = (
     _values: FormValues,
@@ -82,13 +112,13 @@ export function Practice() {
         {({ isValid }) => (
           <Form>
             <VStack>
-              <Heading>{lesson.slug}</Heading>
+              <Tooltip label={VERBS[lesson.slug].reading}>
+                <Heading>{lesson.slug}</Heading>
+              </Tooltip>
 
-              <Text>
-                {lesson.inflection} {VERBS[lesson.slug].reading}
-              </Text>
+              <Badge>{lesson.inflection}</Badge>
 
-              <Badge colorScheme="green">Verb</Badge>
+              <Text>{results}</Text>
 
               <Progress value={10} />
 
@@ -100,11 +130,13 @@ export function Practice() {
                   placeholder="食べました"
                 />
 
-                <IconButton
-                  colorScheme="blue"
-                  aria-label="Search database"
-                  icon={<Mic />}
-                />
+                {SpeechRecognition && (
+                  <IconButton
+                    colorScheme="blue"
+                    aria-label="Search database"
+                    icon={<Mic />}
+                  />
+                )}
               </HStack>
 
               {isValid && (
