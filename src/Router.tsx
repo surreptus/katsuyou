@@ -1,26 +1,34 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import { Practice } from "./pages/Practice";
-import { Settings } from "./pages/Settings";
-import { Vocabulary } from "./pages/Vocabulary";
-import { Show } from "./pages/Vocabulary/Show";
 
 const router = createBrowserRouter(
   [
     {
-      path: "/",
-      element: <Practice />,
+      path: "/settings",
+      lazy: async () => {
+        const { Settings } = await import("./pages/Settings");
+        return { Component: Settings };
+      },
     },
     {
-      path: "/settings",
-      element: <Settings />,
+      path: "/",
+      lazy: async () => {
+        const { Practice } = await import("./pages/Practice");
+        return { Component: Practice };
+      },
     },
     {
       path: "/vocabulary",
-      element: <Vocabulary />,
+      lazy: async () => {
+        const { Vocabulary } = await import("./pages/Vocabulary");
+        return { Component: Vocabulary };
+      },
     },
     {
       path: "/vocabulary/:slug",
-      element: <Show />,
+      lazy: async () => {
+        const { Show } = await import("./pages/Vocabulary");
+        return { Component: Show };
+      },
     },
   ],
   {

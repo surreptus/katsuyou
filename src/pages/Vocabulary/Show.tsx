@@ -1,4 +1,3 @@
-import { Container, Heading, Text } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import verbs from "../../data/verbs.json";
 
@@ -9,10 +8,10 @@ export const Show = () => {
   const verb = verbs[slug as Index];
 
   return (
-    <Container>
-      <Heading>{slug}</Heading>
+    <div>
+      <h1>{slug}</h1>
 
-      <Text>{verb.reading}</Text>
-    </Container>
+      <p>{verb.reading}</p>
+    </div>
   );
 };

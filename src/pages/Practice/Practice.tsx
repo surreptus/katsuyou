@@ -1,28 +1,23 @@
-import {
-  Badge,
-  Button,
-  Container,
-  HStack,
-  Heading,
-  IconButton,
-  Input,
-  Progress,
-  VStack,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useEffect, useState } from "react";
-import { Mic } from "react-feather";
 import { inflect } from "@surreptus/japanese-conjugator";
 import * as yup from "yup";
 
 import { SORTED_VERBS } from "./constants";
-import verbs from "../../data/verbs.json";
-import { getRandomInflection } from "./helpers";
+import verbsJson from "../../data/verbs.json";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VERBS = verbs as any;
+interface Verb {
+  level: number;
+  slug: string;
+  group: string;
+  reading: string;
+  jlpt: string;
+  kana: boolean;
+  definitions: string[];
+}
+
+const verbs: { [key: string]: Verb } = verbsJson;
+import { getRandomInflection } from "./helpers";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -96,13 +91,7 @@ export function Practice() {
   });
 
   return (
-    <Container
-      display="flex"
-      alignItems="center"
-      height="100vh"
-      size="md"
-      justifyContent="center"
-    >
+    <div>
       <Formik
         isInitialValid={false}
         validationSchema={schema}
@@ -111,43 +100,31 @@ export function Practice() {
       >
         {({ isValid }) => (
           <Form>
-            <VStack>
-              <Tooltip label={VERBS[lesson.slug].reading}>
-                <Heading>{lesson.slug}</Heading>
-              </Tooltip>
+            <div>
+              <h1>{lesson.slug}</h1>
 
-              <Badge>{lesson.inflection}</Badge>
+              <p>{verbs[lesson.slug].reading}</p>
 
-              <Text>{results}</Text>
+              <p>{lesson.inflection}</p>
 
-              <Progress value={10} />
+              <p>{results}</p>
 
-              <HStack>
+              <div>
                 <Field
                   lang="ja"
-                  as={Input}
                   name="guess"
                   placeholder="食べました"
+                  type="text"
                 />
 
-                {SpeechRecognition && (
-                  <IconButton
-                    colorScheme="blue"
-                    aria-label="Search database"
-                    icon={<Mic />}
-                  />
-                )}
-              </HStack>
+                {SpeechRecognition && <button aria-label="Search database" />}
+              </div>
 
-              {isValid && (
-                <Button mt="8" colorScheme="green" type="submit">
-                  Continue
-                </Button>
-              )}
-            </VStack>
+              {isValid && <button type="submit">Continue</button>}
+            </div>
           </Form>
         )}
       </Formik>
-    </Container>
+    </div>
   );
 }
