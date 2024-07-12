@@ -12,7 +12,6 @@ import { Heading } from "../../components/Heading";
 import { Text } from "../../components/Text";
 import { Stack } from "../../components/Stack";
 import { Container } from "../../components/Container";
-import { css } from "@emotion/react";
 
 const verbs: { [key: string]: Verb } = verbsJson;
 
