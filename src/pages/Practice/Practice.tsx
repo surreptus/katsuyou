@@ -5,19 +5,16 @@ import * as yup from "yup";
 
 import { SORTED_VERBS } from "./constants";
 import verbsJson from "../../data/verbs.json";
-
-interface Verb {
-  level: number;
-  slug: string;
-  group: string;
-  reading: string;
-  jlpt: string;
-  kana: boolean;
-  definitions: string[];
-}
+import { getRandomInflection } from "./helpers";
+import { Input } from "../../components/Input";
+import { Verb } from "../../types";
+import { Heading } from "../../components/Heading";
+import { Text } from "../../components/Text";
+import { Stack } from "../../components/Stack";
+import { Container } from "../../components/Container";
+import { css } from "@emotion/react";
 
 const verbs: { [key: string]: Verb } = verbsJson;
-import { getRandomInflection } from "./helpers";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -91,7 +88,7 @@ export function Practice() {
   });
 
   return (
-    <div>
+    <Container>
       <Formik
         isInitialValid={false}
         validationSchema={schema}
@@ -100,19 +97,20 @@ export function Practice() {
       >
         {({ isValid }) => (
           <Form>
-            <div>
-              <h1>{lesson.slug}</h1>
+            <Stack direction="column">
+              <Heading>{lesson.slug}</Heading>
 
-              <p>{verbs[lesson.slug].reading}</p>
+              <Text>{verbs[lesson.slug].reading}</Text>
 
-              <p>{lesson.inflection}</p>
-
-              <p>{results}</p>
+              <Text>
+                {lesson.inflection} {results}
+              </Text>
 
               <div>
                 <Field
                   lang="ja"
                   name="guess"
+                  as={Input}
                   placeholder="食べました"
                   type="text"
                 />
@@ -121,10 +119,10 @@ export function Practice() {
               </div>
 
               {isValid && <button type="submit">Continue</button>}
-            </div>
+            </Stack>
           </Form>
         )}
       </Formik>
-    </div>
+    </Container>
   );
 }

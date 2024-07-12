@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Heading = styled.h1`
-  font-size: 3rem;
+export const Text = styled.p`
+  font-size: 1.5rem;
   margin: 0;
 `;
