@@ -6,8 +6,8 @@ import { css, Global } from "@emotion/react";
 
 const globalStyles = css`
   body {
-    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ",
-      Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Osaka,
+      "メイリオ", Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
   }
   * {
     box-sizing: border-box;

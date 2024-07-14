@@ -9,6 +9,7 @@ import { Text } from "../../components/Text";
 import { Stack } from "../../components/Stack";
 import { Container } from "../../components/Container";
 import { VERBS } from "../../data";
+import { toHiragana } from "wanakana";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -48,7 +49,7 @@ recognition.maxAlternatives = 1;
  */
 
 export function Practice() {
-  const [lesson] = useState<Lesson>(generateLesson());
+  const [lesson] = useState<Lesson>(() => generateLesson());
   const [value, setValue] = useState<string>("");
   const [results] = useState<string[]>([]);
 
@@ -65,9 +66,8 @@ export function Practice() {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    console.log(name, value);
-    setValue(value);
+    const { value } = event.target;
+    setValue(toHiragana(value));
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
