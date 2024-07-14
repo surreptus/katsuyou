@@ -1,19 +1,14 @@
-import { Field, Form, Formik, FormikHelpers } from "formik";
 import { useEffect, useState } from "react";
 import { inflect } from "@surreptus/japanese-conjugator";
-import * as yup from "yup";
 
 import { SORTED_VERBS } from "./constants";
-import verbsJson from "../../data/verbs.json";
 import { getRandomInflection } from "./helpers";
 import { Input } from "../../components/Input";
-import { Verb } from "../../types";
 import { Heading } from "../../components/Heading";
 import { Text } from "../../components/Text";
 import { Stack } from "../../components/Stack";
 import { Container } from "../../components/Container";
-
-const verbs: { [key: string]: Verb } = verbsJson;
+import { VERBS } from "../../data";
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -24,14 +19,7 @@ interface Lesson {
   slug: string;
   answer: string;
   inflection: string;
-}
-
-const INITIAL_VALUES = {
-  guess: "",
-};
-
-interface FormValues {
-  guess: string;
+  dueAt: Date;
 }
 
 function generateLesson() {
@@ -42,6 +30,7 @@ function generateLesson() {
     slug: next.slug,
     answer: inflect(next.slug, inflection),
     inflection,
+    dueAt: new Date(),
   };
 }
 
@@ -59,7 +48,8 @@ recognition.maxAlternatives = 1;
  */
 
 export function Practice() {
-  const [lesson, setLesson] = useState<Lesson>(generateLesson());
+  const [lesson] = useState<Lesson>(generateLesson());
+  const [value, setValue] = useState<string>("");
   const [results] = useState<string[]>([]);
 
   useEffect(() => {
@@ -74,54 +64,50 @@ export function Practice() {
     */
   });
 
-  const handleSubmit = (
-    _values: FormValues,
-    { resetForm }: FormikHelpers<FormValues>
-  ) => {
-    setLesson(generateLesson());
-    resetForm();
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    console.log(name, value);
+    setValue(value);
   };
 
-  const schema = yup.object().shape({
-    guess: yup.string().trim().matches(RegExp(lesson.answer)).required(),
-  });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /*
+  const _handleSubmit = (formData: FormData) => {
+    console.log(formData);
+    setLesson(generateLesson());
+  };
+  */
 
   return (
     <Container>
-      <Formik
-        isInitialValid={false}
-        validationSchema={schema}
-        initialValues={INITIAL_VALUES}
-        onSubmit={handleSubmit}
-      >
-        {({ isValid }) => (
-          <Form>
-            <Stack direction="column">
-              <Heading>{lesson.slug}</Heading>
+      <Stack direction="column">
+        <Heading>{lesson.slug}</Heading>
 
-              <Text>{verbs[lesson.slug].reading}</Text>
+        <Text>{VERBS[lesson.slug].reading}</Text>
 
-              <Text>
-                {lesson.inflection} {results}
-              </Text>
+        <Text>
+          {lesson.inflection} {results}
+        </Text>
 
-              <div>
-                <Field
-                  lang="ja"
-                  name="guess"
-                  as={Input}
-                  placeholder="食べました"
-                  type="text"
-                />
+        <div>
+          <Input
+            value={value}
+            isValid
+            lang="ja"
+            onChange={handleChange}
+            name="guess"
+          />
 
-                {SpeechRecognition && <button aria-label="Search database" />}
-              </div>
+          {SpeechRecognition && <button aria-label="Search database" />}
+        </div>
 
-              {isValid && <button type="submit">Continue</button>}
-            </Stack>
-          </Form>
+        {value === lesson.answer && (
+          <>
+            <Text>Correct!</Text>
+            <button type="submit">Continue</button>
+          </>
         )}
-      </Formik>
+      </Stack>
     </Container>
   );
 }

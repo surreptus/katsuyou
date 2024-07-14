@@ -9,6 +9,9 @@ const globalStyles = css`
     font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ",
       Meiryo, "ＭＳ Ｐゴシック", sans-serif;
   }
+  * {
+    box-sizing: border-box;
+  }
 `;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
