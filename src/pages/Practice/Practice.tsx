@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { inflect } from "@surreptus/japanese-conjugator";
 
 import { SORTED_VERBS } from "./constants";
@@ -10,29 +10,44 @@ import { Stack } from "../../components/Stack";
 import { Container } from "../../components/Container";
 import { VERBS } from "../../data";
 import { toHiragana } from "wanakana";
+import { Button } from "../../components/Button";
+import { Progress } from "../../components/Progress";
+import { ArrowRight } from "react-feather";
+import styled from "@emotion/styled";
+
+const GuessContainer = styled.div`
+  position: relative;
+  ${Input} {
+    padding-right: 3rem;
+  }
+  ${Button} {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.5rem;
+    padding: 0.5rem 0;
+    text-align: center;
+  }
+  svg {
+    height: 2rem;
+    width: 2rem;
+  }
+`;
+
+export const Content = styled(Stack)`
+  text-align: center;
+`;
 
 const SpeechRecognition =
   window.SpeechRecognition || window.webkitSpeechRecognition;
-
-const completed = [];
 
 interface Lesson {
   slug: string;
   answer: string;
   inflection: string;
   dueAt: Date;
-}
-
-function generateLesson() {
-  const next = SORTED_VERBS.slice(completed.length)[0];
-  const inflection = getRandomInflection();
-  completed.push(next.slug);
-  return {
-    slug: next.slug,
-    answer: inflect(next.slug, inflection),
-    inflection,
-    dueAt: new Date(),
-  };
 }
 
 /**
@@ -49,7 +64,8 @@ recognition.maxAlternatives = 1;
  */
 
 export function Practice() {
-  const [lesson] = useState<Lesson>(() => generateLesson());
+  const [completed, setCompleted] = useState<string[]>([]);
+  const [lesson, setLesson] = useState<Lesson>(() => generateLesson());
   const [value, setValue] = useState<string>("");
   const [results] = useState<string[]>([]);
 
@@ -65,49 +81,61 @@ export function Practice() {
     */
   });
 
+  function generateLesson() {
+    const next = SORTED_VERBS.slice(completed.length)[0];
+    const inflection = getRandomInflection();
+    return {
+      slug: next.slug,
+      answer: inflect(next.slug, inflection),
+      inflection,
+      dueAt: new Date(),
+    };
+  }
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setValue(toHiragana(value));
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  /*
-  const _handleSubmit = (formData: FormData) => {
-    console.log(formData);
-    setLesson(generateLesson());
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const data = new FormData(event.target as HTMLFormElement);
+    if (data.get("guess") === lesson.answer) {
+      setValue("");
+      setCompleted([...completed, lesson.slug]);
+      setLesson(generateLesson());
+    }
   };
-  */
 
   return (
     <Container>
-      <Stack direction="column">
-        <Heading>{lesson.slug}</Heading>
+      <form onSubmit={handleSubmit}>
+        <Content direction="column">
+          <Progress value={(completed.length / 50) * 100} />
 
-        <Text>{VERBS[lesson.slug].reading}</Text>
+          <Heading title={VERBS[lesson.slug].reading}>{lesson.slug}</Heading>
 
-        <Text>
-          {lesson.inflection} {results}
-        </Text>
+          <Text>
+            {lesson.inflection} {results}
+          </Text>
 
-        <div>
-          <Input
-            value={value}
-            isValid
-            lang="ja"
-            onChange={handleChange}
-            name="guess"
-          />
+          <GuessContainer>
+            <Input
+              autoComplete="off"
+              value={value}
+              lang="ja"
+              onChange={handleChange}
+              name="guess"
+            />
 
-          {SpeechRecognition && <button aria-label="Search database" />}
-        </div>
+            <Button disabled={value === ""} type="submit">
+              <ArrowRight />
+            </Button>
 
-        {value === lesson.answer && (
-          <>
-            <Text>Correct!</Text>
-            <button type="submit">Continue</button>
-          </>
-        )}
-      </Stack>
+            {SpeechRecognition && <button aria-label="Speak" />}
+          </GuessContainer>
+        </Content>
+      </form>
     </Container>
   );
 }

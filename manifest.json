@@ -9,7 +9,7 @@
   "description": "An application to learn and practice Japanese verb conjugations",
   "icons": [
     {
-      "src": "src/assets/logo.png",
+      "src": "./src/assets/logo.png",
       "sizes": "192x192",
       "type": "image/png"
     }

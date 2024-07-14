@@ -34,7 +34,7 @@ function getGroupFromSenses(verb) {
     const partsOfSpeech = verb.senses[0].parts_of_speech.join('')
 
     if (partsOfSpeech.match('Ichidan verb')) return 'ichidan'
-    if (partsOfSpeech.match('Godan verb')) return 'ichidan'
+    if (partsOfSpeech.match('Godan verb')) return 'godan'
 
     return 'irregular'
 }
