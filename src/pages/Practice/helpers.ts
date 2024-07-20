@@ -13,3 +13,7 @@ export function getRandomInflection() {
     Math.floor(Math.random() * SUPPORTED_INFLECTIONS.length)
   ];
 }
+
+export function canBrowserSupportSpeechRecognition() {
+  return !!SpeechRecognition && !!SpeechGrammar;
+}

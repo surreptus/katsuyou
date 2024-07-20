@@ -55,7 +55,7 @@ async function cleanupVerbs() {
 
         carry[verb.slug] = {
             level: lowestWanikaniLevel,
-            slug: verb.slug,
+            slug: verb.slug.replace("-1", ""),
             group: getGroupFromSenses(verb),
             reading: verb.japanese[0].reading,
             jlpt: verb.jlpt[0],

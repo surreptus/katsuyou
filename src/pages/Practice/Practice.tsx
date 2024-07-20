@@ -1,5 +1,6 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { inflect } from "@surreptus/japanese-conjugator";
+import styled from "@emotion/styled";
 
 import { SORTED_VERBS } from "./constants";
 import { getRandomInflection } from "./helpers";
@@ -13,7 +14,6 @@ import { toHiragana } from "wanakana";
 import { Button } from "../../components/Button";
 import { Progress } from "../../components/Progress";
 import { ArrowRight } from "react-feather";
-import styled from "@emotion/styled";
 
 const GuessContainer = styled.div`
   position: relative;
@@ -40,9 +40,6 @@ export const Content = styled(Stack)`
   text-align: center;
 `;
 
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
-
 interface Lesson {
   slug: string;
   answer: string;
@@ -50,36 +47,10 @@ interface Lesson {
   dueAt: Date;
 }
 
-/**
- * 
-const grammar = `#JSGF V1.0; grammar colors; public <color> = たべました | たべませんでした | たべませんでしたか;`;
-
-const recognition = new SpeechRecognition();
-const speechRecognitionList = new SpeechGrammarList();
-speechRecognitionList.addFromString(grammar, 1);
-recognition.grammars = speechRecognitionList;
-recognition.lang = "ja-JP";
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
- */
-
 export function Practice() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [lesson, setLesson] = useState<Lesson>(() => generateLesson());
   const [value, setValue] = useState<string>("");
-  const [results] = useState<string[]>([]);
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    /*
-    recognition.onresult = (event: any) => {
-      const color = event.results[0][0].transcript;
-      console.log(color);
-      setResults(color);
-      console.log(`Confidence: ${event.results[0][0].confidence}`);
-    };
-    */
-  });
 
   function generateLesson() {
     const next = SORTED_VERBS.slice(completed.length)[0];
@@ -115,9 +86,7 @@ export function Practice() {
 
           <Heading title={VERBS[lesson.slug].reading}>{lesson.slug}</Heading>
 
-          <Text>
-            {lesson.inflection} {results}
-          </Text>
+          <Text>{lesson.inflection}</Text>
 
           <GuessContainer>
             <Input
@@ -131,8 +100,6 @@ export function Practice() {
             <Button disabled={value === ""} type="submit">
               <ArrowRight />
             </Button>
-
-            {SpeechRecognition && <button aria-label="Speak" />}
           </GuessContainer>
         </Content>
       </form>
