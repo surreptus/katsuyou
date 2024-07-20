@@ -1,11 +1,11 @@
-name: build and test the project
+name: build
 
 on:
   push:
     branches: ["main"]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
