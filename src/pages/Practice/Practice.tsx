@@ -1,16 +1,15 @@
 import { FormEvent, useState } from "react";
-import { inflect } from "@surreptus/japanese-conjugator";
+import { inflect, Inflection } from "@surreptus/japanese-conjugator";
 import styled from "@emotion/styled";
 
 import { SORTED_VERBS } from "./constants";
-import { getRandomInflection } from "./helpers";
+import { getRandomInflection, INFLECTION_TO_LABEL } from "./helpers";
 import { Input } from "../../components/Input";
 import { Heading } from "../../components/Heading";
 import { Text } from "../../components/Text";
 import { Stack } from "../../components/Stack";
 import { Container } from "../../components/Container";
 import { VERBS } from "../../data";
-import { toHiragana } from "wanakana";
 import { Button } from "../../components/Button";
 import { Progress } from "../../components/Progress";
 import { ArrowRight } from "react-feather";
@@ -38,12 +37,13 @@ const GuessContainer = styled.div`
 
 export const Content = styled(Stack)`
   text-align: center;
+  padding-top: 10vh;
 `;
 
 interface Lesson {
   slug: string;
   answer: string;
-  inflection: string;
+  inflection: Inflection;
   dueAt: Date;
 }
 
@@ -64,8 +64,7 @@ export function Practice() {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setValue(toHiragana(value));
+    setValue(event.target.value);
   };
 
   const handleSubmit = (event: FormEvent) => {
@@ -81,12 +80,12 @@ export function Practice() {
   return (
     <Container>
       <form onSubmit={handleSubmit}>
-        <Content direction="column">
-          <Progress value={(completed.length / 50) * 100} />
+        <Progress value={(completed.length / 50) * 100} />
 
+        <Content direction="column">
           <Heading title={VERBS[lesson.slug].reading}>{lesson.slug}</Heading>
 
-          <Text>{lesson.inflection}</Text>
+          <Text>{INFLECTION_TO_LABEL[lesson.inflection]}</Text>
 
           <GuessContainer>
             <Input
@@ -94,6 +93,7 @@ export function Practice() {
               value={value}
               lang="ja"
               onChange={handleChange}
+              placeholder="食べた"
               name="guess"
             />
 

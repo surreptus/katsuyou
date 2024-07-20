@@ -1,12 +1,25 @@
 import { Inflection } from "@surreptus/japanese-conjugator";
 
-const SUPPORTED_INFLECTIONS = [
+export const SUPPORTED_INFLECTIONS = [
   Inflection.NonPastPolite,
   Inflection.Past,
   Inflection.PastPolite,
   Inflection.Potential,
   Inflection.Te,
 ];
+
+export const INFLECTION_TO_LABEL: Record<Inflection, string> = {
+  [Inflection.NonPastPolite]: "Present Polite",
+  [Inflection.Past]: "Past",
+  [Inflection.PastPolite]: "Past Polite",
+  [Inflection.Potential]: "Potential",
+  [Inflection.Te]: "Te",
+  [Inflection.NonPast]: "",
+  [Inflection.Passive]: "",
+  [Inflection.Causative]: "",
+  [Inflection.CausativePassive]: "",
+  [Inflection.Imperative]: "",
+};
 
 export function getRandomInflection() {
   return SUPPORTED_INFLECTIONS[

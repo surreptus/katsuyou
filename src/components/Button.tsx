@@ -10,7 +10,9 @@ export const Button = styled.button`
   text-align: center;
   transition: background-color 0.2s;
   background-color: ${GREEN};
-  :disabled {
+  :disabled,
+  :disabled:hover {
+    pointer: not-allowed;
     background-color: rgba(0, 0, 0, 0.5);
   }
   :hover,
