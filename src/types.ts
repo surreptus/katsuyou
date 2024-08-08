@@ -7,3 +7,8 @@ export interface Verb {
   kana: boolean;
   definitions: string[];
 }
+
+export interface Lesson {
+  slug: string;
+  date: string;
+}

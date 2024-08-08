@@ -13,6 +13,7 @@ import { VERBS } from "../../data";
 import { Button } from "../../components/Button";
 import { Progress } from "../../components/Progress";
 import { ArrowRight } from "react-feather";
+import { useHistory } from "../../utils/history";
 
 const GuessContainer = styled.div`
   position: relative;
@@ -51,6 +52,7 @@ export function Practice() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [lesson, setLesson] = useState<Lesson>(() => generateLesson());
   const [value, setValue] = useState<string>("");
+  const { history, add } = useHistory();
 
   function generateLesson() {
     const next = SORTED_VERBS.slice(completed.length)[0];
@@ -71,6 +73,7 @@ export function Practice() {
     event.preventDefault();
     const data = new FormData(event.target as HTMLFormElement);
     if (data.get("guess") === lesson.answer) {
+      add(lesson.slug);
       setValue("");
       setCompleted([...completed, lesson.slug]);
       setLesson(generateLesson());
