@@ -1,44 +1,21 @@
 import { FormEvent, useState } from "react";
 import { inflect, Inflection } from "@surreptus/japanese-conjugator";
-import styled from "@emotion/styled";
 
 import { SORTED_VERBS } from "./constants";
 import { getRandomInflection, INFLECTION_TO_LABEL } from "./helpers";
 import { Input } from "../../components/Input";
 import { Heading } from "../../components/Heading";
 import { Text } from "../../components/Text";
-import { Stack } from "../../components/Stack";
-import { Container } from "../../components/Container";
 import { VERBS } from "../../data";
 import { Button } from "../../components/Button";
 import { Progress } from "../../components/Progress";
-import { ArrowRight } from "react-feather";
 import { useHistory } from "../../utils/history";
+import { Layout } from "../../components/Layout";
+import { Stack } from "../../components/Stack";
+import styled from "@emotion/styled";
 
-const GuessContainer = styled.div`
-  position: relative;
-  ${Input} {
-    padding-right: 3rem;
-  }
-  ${Button} {
-    position: absolute;
-    right: 8px;
-    top: 8px;
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.5rem;
-    padding: 0.5rem 0;
-    text-align: center;
-  }
-  svg {
-    height: 2rem;
-    width: 2rem;
-  }
-`;
-
-export const Content = styled(Stack)`
-  text-align: center;
-  padding-top: 10vh;
+const Content = styled(Stack)`
+  padding-top: 2rem;
 `;
 
 interface Lesson {
@@ -52,7 +29,7 @@ export function Practice() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [lesson, setLesson] = useState<Lesson>(() => generateLesson());
   const [value, setValue] = useState<string>("");
-  const { history, add } = useHistory();
+  const { add } = useHistory();
 
   function generateLesson() {
     const next = SORTED_VERBS.slice(completed.length)[0];
@@ -67,11 +44,16 @@ export function Practice() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event.target.value);
+
+    if (event.target.value === lesson.answer) {
+      console.log("Correct!");
+    }
   };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     const data = new FormData(event.target as HTMLFormElement);
+    console.log(data);
     if (data.get("guess") === lesson.answer) {
       add(lesson.slug);
       setValue("");
@@ -80,8 +62,10 @@ export function Practice() {
     }
   };
 
+  const isCorrect = value === lesson.answer;
+
   return (
-    <Container>
+    <Layout>
       <form onSubmit={handleSubmit}>
         <Progress value={(completed.length / 50) * 100} />
 
@@ -90,22 +74,19 @@ export function Practice() {
 
           <Text>{INFLECTION_TO_LABEL[lesson.inflection]}</Text>
 
-          <GuessContainer>
-            <Input
-              autoComplete="off"
-              value={value}
-              lang="ja"
-              onChange={handleChange}
-              placeholder="食べた"
-              name="guess"
-            />
+          <Input
+            autoComplete="off"
+            value={value}
+            lang="ja"
+            readOnly={isCorrect}
+            onChange={handleChange}
+            placeholder="食べた"
+            name="guess"
+          />
 
-            <Button disabled={value === ""} type="submit">
-              <ArrowRight />
-            </Button>
-          </GuessContainer>
+          {isCorrect && <Button type="submit">Next</Button>}
         </Content>
       </form>
-    </Container>
+    </Layout>
   );
 }

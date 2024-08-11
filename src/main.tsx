@@ -4,6 +4,9 @@ import ReactDOM from "react-dom/client";
 import { Router } from "./Router";
 import { css, Global } from "@emotion/react";
 import { BACKGROUND } from "./theme/colors";
+import { instance } from "./store/db";
+
+console.log(instance);
 
 const globalStyles = css`
   body {

@@ -6,15 +6,17 @@ interface Props {
 }
 
 const Rail = styled.div`
-  background-color: #ccc;
-  border-radius: 40px;
-  height: 0.5rem;
+  background-color: rgba(0, 16, 32, 0.08);
+  border-radius: 1rem;
+  height: 1rem;
   width: 100%;
+  overflow: hidden;
 `;
 
 const Bar = styled.div`
   background-color: ${GREEN};
-  border-radius: 40px;
+  border-radius: 1rem;
+  min-width: 1rem;
   height: 100%;
   width: ${(props: Props) => props.value}%;
 `;
