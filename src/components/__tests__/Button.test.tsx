@@ -7,5 +7,6 @@ describe("Button", () => {
     const screen = render(<Button>Click me</Button>);
 
     expect(screen.getByRole("button")).toBeDefined();
+    expect(screen.getByText("Click me")).toBeDefined();
   });
 });

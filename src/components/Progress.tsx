@@ -22,7 +22,7 @@ const Bar = styled.div`
 `;
 
 export const Progress = ({ value }: Props) => (
-  <Rail>
+  <Rail role="progressbar" aria-valuenow={value}>
     <Bar value={value} />
   </Rail>
 );
