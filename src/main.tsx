@@ -1,8 +1,9 @@
 import "normalize.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Router } from "./Router";
 import { css, Global } from "@emotion/react";
+
+import { Router } from "./Router";
 import { BACKGROUND } from "./theme/colors";
 
 const globalStyles = css`

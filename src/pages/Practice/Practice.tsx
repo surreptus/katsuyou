@@ -12,7 +12,7 @@ import { Progress } from "../../components/Progress";
 import { Layout } from "../../components/Layout";
 import { Stack } from "../../components/Stack";
 import styled from "@emotion/styled";
-import { store } from "../../store/db";
+import { store } from "../../utils/store";
 
 const Content = styled(Stack)`
   padding-top: 2rem;

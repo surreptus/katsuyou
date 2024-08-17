@@ -8,7 +8,15 @@ export interface Verb {
   definitions: string[];
 }
 
-export interface Lesson {
+export enum Level {
+  Beginner = "BEGINNER",
+  Intermediate = "INTERMEDIATE",
+  Advanced = "ADVANCED",
+  Expert = "EXPERT",
+}
+
+export interface Review {
   slug: string;
-  date: string;
+  dueDate: Date;
+  level: Level;
 }

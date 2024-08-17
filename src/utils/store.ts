@@ -1,12 +1,14 @@
 import { DBSchema, openDB } from "idb";
+import { Level, Review } from "../types";
 
 interface StoreSchema extends DBSchema {
+  preferences: {
+    key: string;
+    value: string;
+  };
   reviews: {
     key: string;
-    value: {
-      slug: string;
-      dueDate: Date;
-    };
+    value: Review;
     indexes: { dueDate: Date };
   };
 }
@@ -20,22 +22,27 @@ async function createStore() {
   });
 
   async function getNextReview() {
-    const index = db.transaction("reviews").store.index("dueDate");
+    const index = db.transaction("reviews", "readonly").store.index("dueDate");
 
-    for await (const cursor of index.iterate()) {
+    for await (const cursor of index.iterate(new Date())) {
       const review = { ...cursor.value };
       return review;
     }
   }
 
+  async function listAllReviews() {
+    return await db.getAll("reviews");
+  }
+
   async function addReview(slug: string) {
     return await db.put("reviews", {
       slug,
+      level: Level.Beginner,
       dueDate: new Date(),
     });
   }
 
-  return { addReview, getNextReview };
+  return { addReview, getNextReview, listAllReviews };
 }
 
 export const store = await createStore();
