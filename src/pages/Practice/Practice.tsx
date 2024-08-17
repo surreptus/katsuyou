@@ -9,10 +9,10 @@ import { Text } from "../../components/Text";
 import { VERBS } from "../../data";
 import { Button } from "../../components/Button";
 import { Progress } from "../../components/Progress";
-import { useHistory } from "../../utils/history";
 import { Layout } from "../../components/Layout";
 import { Stack } from "../../components/Stack";
 import styled from "@emotion/styled";
+import { store } from "../../store/db";
 
 const Content = styled(Stack)`
   padding-top: 2rem;
@@ -29,11 +29,11 @@ export function Practice() {
   const [completed, setCompleted] = useState<string[]>([]);
   const [lesson, setLesson] = useState<Lesson>(() => generateLesson());
   const [value, setValue] = useState<string>("");
-  const { add } = useHistory();
 
   function generateLesson() {
     const next = SORTED_VERBS.slice(completed.length)[0];
     const inflection = getRandomInflection();
+
     return {
       slug: next.slug,
       answer: inflect(next.slug, inflection),
@@ -42,20 +42,13 @@ export function Practice() {
     };
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-
-    if (event.target.value === lesson.answer) {
-      console.log("Correct!");
-    }
-  };
-
-  const handleSubmit = (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     const data = new FormData(event.target as HTMLFormElement);
-    console.log(data);
+
     if (data.get("guess") === lesson.answer) {
-      add(lesson.slug);
+      await store.addReview(lesson.slug);
+
       setValue("");
       setCompleted([...completed, lesson.slug]);
       setLesson(generateLesson());
@@ -79,7 +72,9 @@ export function Practice() {
             value={value}
             lang="ja"
             readOnly={isCorrect}
-            onChange={handleChange}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setValue(event.target.value)
+            }
             placeholder="食べた"
             name="guess"
           />
