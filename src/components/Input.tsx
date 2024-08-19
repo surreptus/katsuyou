@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { GREEN } from "../theme/colors";
 
 export const Input = styled.input`
   padding: 0.5rem 1rem;
@@ -21,5 +22,8 @@ export const Input = styled.input`
   }
   :readonly {
     text-decoration: none;
+  }
+  :focus:valid {
+    box-shadow: 0 0 0 3px ${GREEN};
   }
 `;
