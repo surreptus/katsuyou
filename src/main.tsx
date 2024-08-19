@@ -5,6 +5,7 @@ import { css, Global } from "@emotion/react";
 
 import { Router } from "./Router";
 import { BACKGROUND } from "./theme/colors";
+import { initializeStore } from "./store";
 
 const globalStyles = css`
   body {
@@ -18,9 +19,15 @@ const globalStyles = css`
   }
 `;
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <Global styles={globalStyles} />
-    <Router />
-  </React.StrictMode>
-);
+async function initialize() {
+  await initializeStore();
+
+  ReactDOM.createRoot(document.getElementById("root")!).render(
+    <React.StrictMode>
+      <Global styles={globalStyles} />
+      <Router />
+    </React.StrictMode>
+  );
+}
+
+initialize();
