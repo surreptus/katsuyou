@@ -1,4 +1,4 @@
-import { DBSchema, openDB } from "idb";
+import { DBSchema, IDBPDatabase, openDB } from "idb";
 import { Review } from "../types";
 import { createReviewsStore } from "./reviews";
 
@@ -35,4 +35,11 @@ export async function createStore() {
   };
 }
 
-export const store = await createStore();
+export let store: {
+  db: IDBPDatabase<StoreSchema>;
+  reviews: ReturnType<typeof createReviewsStore>;
+};
+
+export async function initializeStore() {
+  store = await createStore();
+}

@@ -53,8 +53,6 @@ export function useReviews() {
   }, [getNextOrGenerate]);
 
   async function generateReview() {
-    // eslint-disable-next-line no-debugger
-
     for (const verb of SORTED_VERBS) {
       const review = await store.reviews.get(verb.slug);
 
