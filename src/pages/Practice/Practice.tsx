@@ -53,9 +53,8 @@ export function Practice() {
             autoComplete="off"
             value={value}
             lang="ja"
-            readOnly={isCorrect}
             required
-            pattern="食べる"
+            pattern={answer}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setValue(event.target.value)
             }
