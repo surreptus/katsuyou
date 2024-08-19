@@ -1,3 +1,5 @@
+import { Inflection } from "@surreptus/japanese-conjugator";
+
 export interface Verb {
   level: number;
   slug: string;
@@ -19,4 +21,5 @@ export interface Review {
   slug: string;
   dueDate: Date;
   level: Level;
+  prompt: Inflection;
 }
