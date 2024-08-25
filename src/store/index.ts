@@ -41,5 +41,6 @@ export let store: {
 };
 
 export async function initializeStore() {
-  store = await createStore();
+  console.log("initializing store");
+  if (!store) store = await createStore();
 }

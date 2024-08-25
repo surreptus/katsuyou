@@ -2,6 +2,7 @@ import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Stack } from "../Stack";
+import { GREEN } from "../../theme/colors";
 
 const Navigation = styled.div`
   display: flex;
@@ -13,20 +14,25 @@ const Navigation = styled.div`
 `;
 
 export const Content = styled.div`
-  margin-bottom: 5rem;
+  padding-bottom: 6rem;
 `;
 
 export const Container = styled(Stack)`
-  max-width: 35rem;
+  max-width: 30rem;
   height: 100vh;
   margin: 0 auto;
   padding: 1rem;
+  align-items: stretch;
+
   ${Content} {
     flex: 1;
   }
 
   ${Navigation} {
     flex: 0;
+    align-self: center;
+    position: fixed;
+    bottom: 1rem;
   }
 `;
 
@@ -35,7 +41,7 @@ const Link = styled(RouterLink)`
   padding: 0.5rem 1rem;
   text-decoration: none;
   :hover {
-    color: blue;
+    color: ${GREEN};
   }
 `;
 

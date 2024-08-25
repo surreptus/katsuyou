@@ -27,8 +27,8 @@ export const Vocabulary = () => {
       </div>
 
       <div>
-        {filtered.map((verb) => (
-          <Link to={`/vocabulary/${verb.slug}`}>
+        {filtered.map((verb, index) => (
+          <Link key={verb.slug + index} to={`/vocabulary/${verb.slug}`}>
             <div key={verb.slug}>
               <h1>{verb.slug}</h1>
               <p>{verb.reading}</p>
