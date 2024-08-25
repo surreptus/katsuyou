@@ -1,11 +1,11 @@
 import "normalize.css";
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { css, Global } from "@emotion/react";
 
-import { Router } from "./Router";
 import { BACKGROUND } from "./theme/colors";
-import { initializeStore } from "./store";
+import { App } from "./App";
+import { Router } from "./Router";
 
 const globalStyles = css`
   body {
@@ -19,15 +19,13 @@ const globalStyles = css`
   }
 `;
 
-async function initialize() {
-  await initializeStore();
-
-  ReactDOM.createRoot(document.getElementById("root")!).render(
-    <React.StrictMode>
-      <Global styles={globalStyles} />
-      <Router />
-    </React.StrictMode>
-  );
-}
-
-initialize();
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <Global styles={globalStyles} />
+    <Suspense fallback="Loading">
+      <App>
+        <Router />
+      </App>
+    </Suspense>
+  </React.StrictMode>
+);

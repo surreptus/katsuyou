@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Level, Review } from "../../types";
 import { store } from "../../store";
 import { SORTED_VERBS } from "./constants";
+import { OrderedEnum } from "../../utils";
 
 export const SUPPORTED_INFLECTIONS = [
   Inflection.NonPastPolite,
@@ -24,6 +25,8 @@ export const INFLECTION_TO_LABEL: Record<Inflection, string> = {
   [Inflection.CausativePassive]: "Passive Causative",
   [Inflection.Imperative]: "Imperative",
 };
+
+const OrderedLevels = OrderedEnum.of(Level);
 
 export function getRandomInflection() {
   return SUPPORTED_INFLECTIONS[
@@ -72,8 +75,11 @@ export function useReviews() {
 
   async function progress(review: Review) {
     if (review.dueDate < new Date()) {
+      const nextLevel = OrderedLevels.next(review.level);
+
       store.reviews.update({
         ...review,
+        level: nextLevel ? nextLevel : review.level,
         dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24),
       });
     }
