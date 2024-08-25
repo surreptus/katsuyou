@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { store } from "..";
+import { initializeStore, store } from "..";
 
-describe("store", () => {
+describe("store", async () => {
+  await initializeStore();
   it("should have the child stores", () => {
     expect(store.reviews).toBeDefined();
   });
