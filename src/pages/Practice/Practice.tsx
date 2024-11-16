@@ -2,19 +2,8 @@ import { FormEvent, useState } from "react";
 import { inflect } from "@surreptus/japanese-conjugator";
 
 import { INFLECTION_TO_LABEL, useReviews } from "./helpers";
-import { Input } from "../../components/Input";
-import { Heading } from "../../components/Heading";
-import { Text } from "../../components/Text";
-import { VERBS } from "../../data";
-import { Button } from "../../components/Button";
 import { Progress } from "../../components/Progress";
 import { Layout } from "../../components/Layout";
-import { Stack } from "../../components/Stack";
-import styled from "@emotion/styled";
-
-const Content = styled(Stack)`
-  padding-top: 2rem;
-`;
 
 export function Practice() {
   const [completed, setCompleted] = useState<number>(0);
@@ -42,14 +31,14 @@ export function Practice() {
       <form onSubmit={handleSubmit}>
         <Progress value={(completed / 50) * 100} />
 
-        <Content direction="column">
-          <Heading title={VERBS[reviews.current.slug].reading}>
-            {reviews.current.slug}
-          </Heading>
+        <div className="flex content-center text-center flex-col pt-4">
+          <h1>{reviews.current.slug}</h1>
 
-          <Text>{INFLECTION_TO_LABEL[reviews.current.prompt]}</Text>
+          <p className="text-3xl font-bold underline">
+            {INFLECTION_TO_LABEL[reviews.current.prompt]}
+          </p>
 
-          <Input
+          <input
             autoComplete="off"
             value={value}
             lang="ja"
@@ -62,8 +51,8 @@ export function Practice() {
             name="guess"
           />
 
-          {isCorrect && <Button type="submit">Next</Button>}
-        </Content>
+          {isCorrect && <button type="submit">Next</button>}
+        </div>
       </form>
     </Layout>
   );

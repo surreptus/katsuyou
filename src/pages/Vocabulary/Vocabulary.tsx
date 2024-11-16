@@ -1,8 +1,7 @@
 import verbs from "../../data/verbs.json";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { Layout } from "../../components/Layout";
-import { Input } from "../../components/Input";
 const list = Object.values(verbs);
 
 export const Vocabulary = () => {
@@ -18,10 +17,12 @@ export const Vocabulary = () => {
         <h1>Vocabulary</h1>
         <p>Words that you can practice conjugations for</p>
 
-        <Input
+        <input
           type="text"
           placeholder="Filter"
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setSearch(event.target.value)
+          }
           value={search}
         />
       </div>
